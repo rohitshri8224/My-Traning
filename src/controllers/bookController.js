@@ -1,4 +1,4 @@
-const { count } = require("console")
+//npconst { count } = require("console")
 const BookModel= require("../models/bookModel")
 
 //Assignment:-
@@ -9,7 +9,29 @@ const createBook = async function(req,res){
     let saveData = await BookModel.create(data)
     res.send({msg:saveData})
 }
+const bookList = async function(req,res){
+    let allBooksData = await BookModel.find().select({bookName:1 , authorName:1})
+    res.send({msg:allBooksData})
+
+}
+const BooksInYear = async function(req,res){
+    let allBooksInYear = await BookModel.find({year:req.query.year}).select({bookName:1 ,_id:0})
+    res.send({msg:allBooksInYear})
+}
+const getXINRBooks = async function(req,res){
+    let XINRBooks = await BookModel.find({"price.indianPrice" : {$in:["100","200","500"]}}).select({bookName:1,_id:0})
+    res.send({msg:XINRBooks})
+}
+const getRandomBooks = async function(req,res){
+    let randomBooks = await BookModel.find({$or:[{stockAvailable:true},{totalPages : {$gt :500} }]}).select({bookName:1,_id:0})
+    res.send({msg:randomBooks})
+
+}
 module.exports.createBook = createBook
+module.exports.bookList = bookList
+module.exports.BooksInYear = BooksInYear
+module.exports.getXINRBooks = getXINRBooks
+module.exports.getRandomBooks = getRandomBooks
 
 //-----------------------------------------------------------------------------------------------------------------------------
 // const createBook= async function (req, res) {
