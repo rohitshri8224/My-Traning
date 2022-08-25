@@ -11,9 +11,15 @@ router.get("/test-me", function (req, res) {
 
 router.post("/createAuthor", newAuthorController.createAuthor  )
 router.post("/createPublisher",newPublisherController.createPublisher)
-
 router.post("/createBook",newBookController.createBook)
-router.post("/checkAuthorId",newBookController.checkAuthorId)
+router.get("/getAllData",newBookController.getAllData)
+
+// router.post("/newAuthor", newAuthorController.newAuthor  )
+// router.post("/newPublisher", newPublisherController.newPublisher)
+// router.post("/createNewBook", newBookController.createNewBook)
+
+// router.put("/book",newBookController.book)
+//router.post("/checkAuthorId",newBookController.checkAuthorId)
 
 
 module.exports = router;

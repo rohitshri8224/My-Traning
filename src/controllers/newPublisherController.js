@@ -6,4 +6,13 @@ const createPublisher = async function(req,res){
     res.send({msg:savedData})
 }
 
+
+
+// const newPublisher = async function(req,res){
+//     let data = req.body
+//     let savedData = await newPublisherModel.create(data)
+//     res.send({msg:savedData})
+// }
+
 module.exports.createPublisher=createPublisher
+//module.exports.newPublisher=newPublisher
