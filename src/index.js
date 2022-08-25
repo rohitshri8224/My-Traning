@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const route = require('./routes/route.js');
 const { default: mongoose } = require('mongoose');
 const app = express();
+const moment = require('moment')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,6 +21,17 @@ mongoose.connect("mongodb+srv://functionup-cohort:G0Loxqc9wFEGyEeJ@cluster0.rzot
 //         next();
 //   }
 //   );
+
+
+    const midGlbl = function (req,res,next){
+
+        const today = moment()
+        console.log(today.format() + req.ip + req.path)
+        next()
+    }
+    app.use(midGlbl)
+    
+
   
 
 app.use('/', route);
