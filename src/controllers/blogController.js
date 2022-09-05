@@ -4,7 +4,9 @@ const authorModel = require('../models/authorModel')
 const getBlogs = async function(req,res){
 
    try{ const query = req.query
+    const temp ={isDeleted:false, isPublished:true}
     //console.log()
+    const final = Object.assign({},query,temp)
     
 
     if(Object.keys(query).length == 0)
@@ -13,7 +15,10 @@ const getBlogs = async function(req,res){
     }
     else
     {
-        let data = await blogModel.find(query)
+        let data = await blogModel.find(final)
+        if(data.length==0)
+        res.status(404).send({status:false, msg:"no such data"})
+        else
         res.status(200).send({status:true, data:data})
 
 
