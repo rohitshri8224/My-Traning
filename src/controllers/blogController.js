@@ -1,11 +1,11 @@
 const blogModel = require("../models/blogModel")
 const authorModel = require('../models/authorModel')
 
-const getBlogs = function(req,res){
+const getBlogs = async function(req,res){
 
    try{ const query = req.query
     console.log(query)
-    const data = blogModel.find(query)
+    const data = await blogModel.find(query)
 
     if(data.length==0)
     {
