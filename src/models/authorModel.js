@@ -11,7 +11,7 @@ const authorSchema = new mongoose.Schema({
     },
     title: {
         type: String,
-        required: true, enum:[Mr, Mrs, Miss]},
+        required: true, enum:["Mr", "Mrs", "Miss"]},
     
         email: {
             type: String,
@@ -22,8 +22,11 @@ const authorSchema = new mongoose.Schema({
             type: String,
              required: true
         }
+        
 
-    })
+
+
+    },{timestamps: true})
        module.exports=mongoose.model("Author", authorSchema)
 
 
