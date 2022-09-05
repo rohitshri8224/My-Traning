@@ -6,7 +6,7 @@ const blogController = require("../controllers/blogController")
 const blogController = require('../controllers/blogController')
 
 router.get("/blogs",blogController.getBlogs)
-router.post("/createAuther",authorController.createAuthor)
+router.post("/authors",authorController.createAuthor)
 router.post("/blogs",blogController.createBlog)
 
 module.exports = router
