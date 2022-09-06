@@ -39,7 +39,9 @@ isPublished : {
 
         type: Boolean,
         default: false
-    }
+    },
+    publishedAt: Date,
+    deletedAt: Date
 
 },{timestamps: true})
 

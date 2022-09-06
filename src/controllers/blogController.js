@@ -1,5 +1,6 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
+const moment = require('moment')
 
 const getBlogs = async function (req, res) {
   try {
@@ -47,6 +48,38 @@ const createBlog = async function (req, res) {
   }
 };
 
+const updateBlog = async (req,res) => {
+    try{
+        let blog = req.body;
+        let blogId = req.params.blogId 
+        let published= {
+            publishedAt:moment().format()
+        }
+        const final = Object.assign({}, blog, published);
+        console.log(published)
+       
+        let myBlogModel = await blogModel.findById(blogId)
+        
+        if(!myBlogModel || myBlogModel["isDeleted"]==true){
+       return res.status(404).send({status:false, error:"invalid bro!"})}
+       if(!blog.isPublished)
+        {allBlogs= await blogModel.findOneAndUpdate(
+           { _id:blogId},{$push:blog},{new:true}
+        )
+        res.status(200).send({data:allBlogs})}
+        allBlogs= await blogModel.findOneAndUpdate(
+            { _id:blogId},{$push:final},{new:true}
+         )
+        console.log(final)
+        res.status(200).send({data:allBlogs})
+    } catch(err) {
+       console.log({error: err.message})
+    }
+  
+  }
+
+
+
 const deleteBlogs=async function(req,res){
 
     try {
@@ -88,3 +121,4 @@ module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.deleteBlogs = deleteBlogs
 module.exports.removeBlog = removeBlog
+module.exports.updateBlog = updateBlog
