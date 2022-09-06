@@ -5,6 +5,10 @@ const moment = require('moment')
 const getBlogs = async function (req, res) {
   try {
     const query = req.query;
+    const comp = ["subcategory", "category", "tags", "authorId", "body","title"]
+    if(!Object.keys(query).every(elem => comp.includes(elem)))
+    return res.status(404).send({ status: false, msg: "no such data" });
+
     const temp = { isDeleted: false, isPublished: true };
     //console.log()
     const final = Object.assign({}, query, temp);
@@ -56,7 +60,7 @@ const updateBlog = async (req,res) => {
             publishedAt:moment().format()
         }
         const final = Object.assign({}, blog, published);
-        console.log(published)
+        // console.log(published)
        
         let myBlogModel = await blogModel.findById(blogId)
         
@@ -66,7 +70,7 @@ const updateBlog = async (req,res) => {
         {allBlogs= await blogModel.findOneAndUpdate(
            { _id:blogId},{$push:blog},{new:true}
         )
-        res.status(200).send({data:allBlogs})}
+        return res.status(200).send({data:allBlogs})}
         allBlogs= await blogModel.findOneAndUpdate(
             { _id:blogId},{$push:final},{new:true}
          )
@@ -84,15 +88,19 @@ const deleteBlogs=async function(req,res){
 
     try {
         const query = req.query;
+        const comp = ["subcategory", "category", "tags", "authorId", "body","title","isPublished"]
+        if(!Object.keys(query).every(elem => comp.includes(elem)))
+        return res.status(404).send({ status: false, msg: "wrong query" });
         const temp = { isDeleted: false};
         const final = Object.assign({}, query, temp);
         if(Object.keys(query).length==0)
             res.status(400).send({status:false, msg:"no query given"})
       else{
-        let data = await blogModel.updateMany(final,{isDeleted:true});
+        let data = await blogModel.updateMany(final,{isDeleted:true,deletedAt:Date.now()},{new:true});
         if (data.matchedCount == 0)
             res.status(404).send({ status: false, msg: "blog doesn't exist" });
-          else res.status(200).send({ status: true, data: data });
+          else 
+          res.status(200).send({ status: true, data: data });
       }
     
     } catch (err) {
