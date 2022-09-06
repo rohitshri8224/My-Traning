@@ -30,6 +30,11 @@ const createBlog = async function (req, res) {
     if (!author_id)
       return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
 
+// validation for title
+if (!/^[a-zA-Z0-9:-]+$/.test(blog.title)) {
+  return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
+}
+
     let createBlogs = await blogModel.create(blog);
      res.status(201).send({ status: true, data: createBlogs });
   }  catch (err) {
