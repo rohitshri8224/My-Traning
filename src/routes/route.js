@@ -10,3 +10,4 @@ router.post("/authors",authorController.createAuthor)
 router.post("/blogs",blogController.createBlog)
 
 module.exports = router
+  
