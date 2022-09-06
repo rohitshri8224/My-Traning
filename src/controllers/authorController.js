@@ -17,7 +17,7 @@ const createAuthor = async function(req,res){
      return res.status(400).send({staus:true, error:'Only alphabets !!'})
     
      //password validation
-     if(/^?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(data.password))
+     if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(data.password))
      return res.status(400).send({status:false, error:'Length should be 8 or more!'})
     
     let savedData = await authorModel.create(data)
