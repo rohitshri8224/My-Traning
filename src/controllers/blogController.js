@@ -67,7 +67,24 @@ const deleteBlogs=async function(req,res){
       }
 
 }
+const removeBlog = async function (req, res) {
+  try {
+    let blogId = req.params.blogId
+    let blog_id = await blogModel.findById(blogId)
+    if (blog_id && blog_id.isDeleted == false) {
+
+      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
+      return res.status(200).send()
+
+    } else {
+      return res.status(404).send({ msg: "not found" })
+    }
+  }
+  catch (err) {
+    return res.status(500).send({ error: err })
+  }}
 
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.deleteBlogs = deleteBlogs
+module.exports.removeBlog = removeBlog
