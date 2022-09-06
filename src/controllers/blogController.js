@@ -37,5 +37,27 @@ const createBlog = async function (req, res) {
   }
 };
 
+const deleteBlogs=async function(req,res){
+
+    try {
+        const query = req.query;
+        const temp = { isDeleted: false};
+        const final = Object.assign({}, query, temp);
+        if(Object.keys(query).length==0)
+            res.status(400).send({status:false, msg:"no query given"})
+      else{
+        let data = await blogModel.updateMany(final,{isDeleted:true});
+        if (data.matchedCount == 0)
+            res.status(404).send({ status: false, msg: "blog doesn't exist" });
+          else res.status(200).send({ status: true, data: data });
+      }
+    
+    } catch (err) {
+        res.status(500).send({ status: false, msg: err.message });
+      }
+
+}
+
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
+module.exports.deleteBlogs = deleteBlogs
