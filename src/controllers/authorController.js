@@ -1,4 +1,7 @@
 const authorModel = require("../models/authorModel")
+const jwt = require("jsonwebtoken")
+
+
 const createAuthor = async function(req,res){
    
    try{ 
@@ -28,4 +31,32 @@ const createAuthor = async function(req,res){
    }
 }
 
+// token genration
+
+const login = async function (req, res) {
+try{
+   let emailId = req.body.email
+   let password = req.body.password
+   let loginUser = await authorModel.findOne({ emailId: emailId, password: password })
+   if (!loginUser) {
+       return res.status(401).send({ msg: "invalid user" })
+   }
+   let jwtToken = jwt.sign(
+       {
+           loginId: loginUser._id.toString(),
+           userStatus: "active",
+           app: "myBlog"
+       },
+       "vro party all night!!!!!!!!"
+
+   )
+   res.setHeader("x-api-key",jwtToken)
+    res.status(200).send({ status: true })
+      }
+      catch(err){
+         return res.status(500).send({error:err.message})
+      } 
+}
+
 module.exports.createAuthor = createAuthor
+module.exports.login = login

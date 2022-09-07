@@ -76,7 +76,7 @@ const updateBlog = async (req,res) => {
         res.status(200).send({data:allBlogs})
 
     } catch(err) {
-       console.log({error: err.message})
+      return res.status(500).send({error: err.message})
     }
   
   }
