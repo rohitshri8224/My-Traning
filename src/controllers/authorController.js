@@ -1,5 +1,6 @@
 const authorModel = require("../models/authorModel")
 const jwt = require("jsonwebtoken")
+const blogModel = require("../models/blogModel");
 
 
 const createAuthor = async function(req,res){
@@ -58,5 +59,20 @@ try{
       } 
 }
 
+const demoAuthorAll = async function(req,res)
+{
+    let demo = await authorModel.find()
+
+    res.send(demo)
+}
+const demoBlogAll = async function(req,res)
+{
+    let demo = await blogModel.find()
+    res.send(demo)
+}
+
+
 module.exports.createAuthor = createAuthor
 module.exports.login = login
+module.exports.demoAuthorAll = demoAuthorAll
+module.exports.demoBlogAll = demoBlogAll

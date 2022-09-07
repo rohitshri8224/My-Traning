@@ -27,5 +27,9 @@ router.delete("/blogs/:blogId", mid.verifyAuthor, mid.authorization, blogControl
 //login API
 router.post("/login", authorController.login)
 
+//for demo purposes
+router.get("/demo",authorController.demoAuthorAll)
+router.get("/demoblog",authorController.demoBlogAll)
+
 module.exports = router
   
