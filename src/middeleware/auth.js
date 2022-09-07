@@ -1,17 +1,17 @@
 const jwt = require("jsonwebtoken");
 
-const authorModel = require("../models/authorModel");
 const blogModel = require("../models/blogModel");
 
+// verifying token
 const verifyAuthor = function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
     if (!token) {
-      return res.send({ msg: "token not present" });
+      return res.status(400).send({ msg: "token not present" });
     }
     let validation = jwt.verify(token, "vro party all night!!!!!!!!");
     if (!validation) {
-      return res.status(403).send({});
+      return res.status(403).send({error:'Not Authorised'});
     }
     next();
   } catch (err) {
@@ -19,7 +19,7 @@ const verifyAuthor = function (req, res, next) {
   }
 };
 
-const authrization = async function (req, res, next) {
+const authorization = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
     let blogId = req.params.blogId;
@@ -40,4 +40,4 @@ const authrization = async function (req, res, next) {
 };
 
 module.exports.verifyAuthor = verifyAuthor;
-module.exports.authrization = authrization;
+module.exports.authorization = authorization;

@@ -2,18 +2,30 @@ const express = require('express');
 const router = express.Router()
 const authorController = require("../controllers/authorController")
 const blogController = require("../controllers/blogController")
-const middleware = require("../middeleware/auth")
+const mid = require("../middeleware/auth")
+const validation = require('../validation/validation')
 
-// const blogController = require('../controllers/blogController')
 
-router.get("/blogs",middleware.verifyAuthor,blogController.getBlogs)
-router.post("/authors",authorController.createAuthor)
-router.post("/blogs",middleware.verifyAuthor,blogController.createBlog)
-router.put("/blogs/:blogId",middleware.verifyAuthor,middleware.authrization,blogController.updateBlog)
-router.delete("/blogs",middleware.verifyAuthor, middleware.authrization, blogController.deleteBlogs)
-router.delete("/blogs/:blogId",middleware.verifyAuthor,middleware.authrization, blogController.removeBlog)
+// get all the blogs with condition API
+router.get("/blogs", mid.verifyAuthor, blogController.getBlogs)
 
-router.post("/login",authorController.login)
+//create author API
+router.post("/authors", validation.authorValidation, authorController.createAuthor)
+
+//create blog API
+router.post("/blogs", mid.verifyAuthor, validation.blogCreateValidataion, blogController.createBlog)
+
+//update blog Api
+router.put("/blogs/:blogId", mid.verifyAuthor, mid.authorization, validation.blogUpdateValidation, blogController.updateBlog)
+
+//delete blog using query params API
+router.delete("/blogs", mid.verifyAuthor, mid.authorization, blogController.deleteBlogs)
+
+//delete blog using path params API
+router.delete("/blogs/:blogId", mid.verifyAuthor, mid.authorization, blogController.removeBlog)
+
+//login API
+router.post("/login", authorController.login)
 
 module.exports = router
   

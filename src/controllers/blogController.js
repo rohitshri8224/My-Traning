@@ -1,5 +1,7 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
+const  mongoose  = require('mongoose');
+const objectId = mongoose.Schema.Types.ObjectId
 
 
 
@@ -17,8 +19,8 @@ const createBlog = async function (req, res) {
     if (!author_id)
       return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
 
-// validation for title
-  if (!/^[a-zA-Z0-9.,'"! :-]+$/.test(blog.title) || (!/^[a-zA-Z0-9.,'"! :-]+$/.test(blog.body))) {
+// validation for title and body
+  if (!/^[a-zA-Z.,'"! :-]+$/.test(blog.title) || (!/^[a-zA-Z0-9.,'"! :-]+$/.test(blog.body))) {
   return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
 }
 
@@ -41,7 +43,7 @@ const getBlogs = async function (req, res) {
     //console.log()
     const final = Object.assign({}, query, temp);
 
-      let data = await blogModel.find(final);
+      let data = await blogModel.find(final).populate('Author');
       if (data.length == 0)
         res.status(400).send({ status: false, msg: "wrong query parameters" });
       else res.status(200).send({ status: true, data: data });
@@ -60,9 +62,12 @@ const updateBlog = async (req,res) => {
         let obj={}
         let objarr={}
         let myBlogModel = await blogModel.findById(blogId)
+        let id = myBlogModel._id.toString()
+        if(!id)
+        return res.status(400).send({error:'Invalid blogId'})
         
         if(!myBlogModel || myBlogModel["isDeleted"]==true){
-       return res.status(404).send({status:false, error:"invalid bro!"})}
+        return res.status(404).send({status:false, error:"invalid bro!"})}
 
         if(blog.tags) objarr["tags"]=blog.tags 
         if(blog.subcategory) objarr["subcategory"]=blog.subcategory 
@@ -96,7 +101,7 @@ const updateBlog = async (req,res) => {
       }
     }
     catch (err) {
-      return res.status(500).send({ error: err })
+      return res.status(500).send({ error: err.message})
     }}
 
 //update blog by using query
