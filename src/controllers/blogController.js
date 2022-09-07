@@ -1,11 +1,39 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-const moment = require('moment')
 
+
+
+
+//create post api
+
+const createBlog = async function (req, res) {
+  try {
+    let blog = req.body;
+    let authorId = blog.authorId;
+    if (!authorId)
+      return res.status(404).send({ status: false, msg: "Required Author Id !" });
+
+    let author_id = await authorModel.findById(authorId);
+    if (!author_id)
+      return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
+
+// validation for title
+  if (!/^[a-zA-Z0-9.,'"! :-]+$/.test(blog.title) || (!/^[a-zA-Z0-9.,'"! :-]+$/.test(blog.body))) {
+  return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
+}
+
+    let createBlogs = await blogModel.create(blog);
+     res.status(201).send({ status: true, data: createBlogs });
+  }  catch (err) {
+      res.status(500).send({ error: err.message });
+  }
+};
+
+//get blog
 const getBlogs = async function (req, res) {
   try {
     const query = req.query;
-    const comp = ["subcategory", "category", "tags", "authorId", "body","title"]
+    const comp = ["subcategory", "category", "tags", "authorId"]
     if(!Object.keys(query).every(elem => comp.includes(elem)))
     return res.status(404).send({ status: false, msg: "no such data" });
 
@@ -22,36 +50,8 @@ const getBlogs = async function (req, res) {
   }
 };
 
-//create post api
 
-const createBlog = async function (req, res) {
-  try {
-    let blog = req.body;
-    let authorId = blog.authorId;
-    if (!authorId)
-      return res.status(404).send({ status: false, msg: "Required Author Id !" });
-
-    let author_id = await authorModel.findById(authorId);
-    if (!author_id)
-      return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
-
-// validation for title
-  if (!/^[a-zA-Z0-9:-]+$/.test(blog.title)) {
-  return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
-}
-
-//validate body
-  if (!/^[a-zA-Z0-9 :-.,!']+$/.test(blog.body)) {
-  return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : - . , !' })
-}
-
-    let createBlogs = await blogModel.create(blog);
-     res.status(201).send({ status: true, data: createBlogs });
-  }  catch (err) {
-      res.status(500).send({ error: err.message });
-  }
-};
-
+//update blog 
 const updateBlog = async (req,res) => {
     try{
         let blog = req.body;
@@ -81,13 +81,30 @@ const updateBlog = async (req,res) => {
   
   }
 
+// update blog by using params
+  const removeBlog = async function (req, res) {
+    try {
+      let blogId = req.params.blogId
+      let blog_id = await blogModel.findById(blogId)
+      if (blog_id && blog_id.isDeleted == false) {
+  
+        let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
+        return res.status(200).send()
+  
+      } else {
+        return res.status(404).send({ msg: "not found" })
+      }
+    }
+    catch (err) {
+      return res.status(500).send({ error: err })
+    }}
 
-
+//update blog by using query
 const deleteBlogs=async function(req,res){
 
     try {
         const query = req.query;
-        const comp = ["subcategory", "category", "tags", "authorId", "body","title","isPublished"]
+        const comp = ["subcategory", "category", "tags", "authorId","isPublished"]
         if(!Object.keys(query).every(elem => comp.includes(elem)))
         return res.status(404).send({ status: false, msg: "wrong query" });
         const temp = { isDeleted: false};
@@ -107,22 +124,7 @@ const deleteBlogs=async function(req,res){
       }
 
 }
-const removeBlog = async function (req, res) {
-  try {
-    let blogId = req.params.blogId
-    let blog_id = await blogModel.findById(blogId)
-    if (blog_id && blog_id.isDeleted == false) {
 
-      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
-      return res.status(200).send()
-
-    } else {
-      return res.status(404).send({ msg: "not found" })
-    }
-  }
-  catch (err) {
-    return res.status(500).send({ error: err })
-  }}
 
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
