@@ -15,7 +15,7 @@ const getBlogs = async function (req, res) {
 
       let data = await blogModel.find(final);
       if (data.length == 0)
-        res.status(404).send({ status: false, msg: "no such data" });
+        res.status(400).send({ status: false, msg: "wrong query parameters" });
       else res.status(200).send({ status: true, data: data });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
@@ -41,8 +41,8 @@ const createBlog = async function (req, res) {
 }
 
 //validate body
-  if (!/^[a-zA-Z0-9 :-]+$/.test(blog.body)) {
-  return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
+  if (!/^[a-zA-Z0-9 :-.,!']+$/.test(blog.body)) {
+  return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : - . , !' })
 }
 
     let createBlogs = await blogModel.create(blog);
@@ -56,26 +56,25 @@ const updateBlog = async (req,res) => {
     try{
         let blog = req.body;
         let blogId = req.params.blogId 
-        let published= {
-            publishedAt:moment().format()
-        }
-        const final = Object.assign({}, blog, published);
-        // console.log(published)
-       
+
+        let obj={}
+        let objarr={}
         let myBlogModel = await blogModel.findById(blogId)
         
         if(!myBlogModel || myBlogModel["isDeleted"]==true){
        return res.status(404).send({status:false, error:"invalid bro!"})}
-       if(!blog.isPublished)
-        {allBlogs= await blogModel.findOneAndUpdate(
-           { _id:blogId},{$push:blog},{new:true}
-        )
-        return res.status(200).send({data:allBlogs})}
-        allBlogs= await blogModel.findOneAndUpdate(
-            { _id:blogId},{$push:final},{new:true}
-         )
-        console.log(final)
+
+        if(blog.tags) objarr["tags"]=blog.tags 
+        if(blog.subcategory) objarr["subcategory"]=blog.subcategory 
+        if(blog.body) obj["body"]=blog.body 
+        if(blog.title) obj["title"]=blog.title 
+        if(blog.category) obj["category"]=blog.category 
+        obj["isPublished"] = true
+        obj["publishedAt"] = Date.now()
+
+        const allBlogs = await blogModel.findOneAndUpdate({_id:blogId},{$push:objarr,$set:obj},{new:true})
         res.status(200).send({data:allBlogs})
+
     } catch(err) {
        console.log({error: err.message})
     }
