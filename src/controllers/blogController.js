@@ -40,6 +40,7 @@ const getBlogs = async function (req, res) {
     const temp = { isDeleted: false, isPublished: true };
     //console.log()
     const final = Object.assign({}, query, temp);
+          //populate
 
       let data = await blogModel.find(final);
       if (data.length == 0)
