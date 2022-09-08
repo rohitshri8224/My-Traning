@@ -1,10 +1,5 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-// const  mongoose  = require('mongoose');
-// const objectId = mongoose.Schema.Types.ObjectId
-
-
-
 
 //create post api
 
@@ -35,9 +30,8 @@ const getBlogs = async function (req, res) {
     return res.status(400).send({ status: false, msg: "wrong query parameters" });
 
     const temp = { isDeleted: false, isPublished: true };
-    //console.log()
+
     const final = Object.assign({}, query, temp);
-          //populate
 
       let data = await blogModel.find(final).populate("authorId");
       if (data.length == 0)
@@ -62,10 +56,6 @@ const updateBlog = async (req,res) => {
         let myBlogModel = await blogModel.findById(blogId)
         if(!myBlogModel || myBlogModel["isDeleted"]==true){
           return res.status(404).send({status:false, msg:"Blog doesnt exist"})}
-        // let id = myBlogModel._id.toString()
-
-        // if(!id)
-        // return res.status(404).send({error:'Blog doesnt exist'})
 
         if(blog.tags) objarr["tags"]=blog.tags 
         if(blog.subcategory) objarr["subcategory"]=blog.subcategory 
