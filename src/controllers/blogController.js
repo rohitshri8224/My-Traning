@@ -99,6 +99,9 @@ const deleteBlogs = async function (req, res) {
   try {
     const query = req.query;
     const comp = ["subcategory", "category", "tags", "authorId", "isPublished"]
+    if(query.isPublished)
+    return res.status(400).send({ status: false, msg: "ispublished is true" });
+
     if (!Object.keys(query).every(elem => comp.includes(elem)))
       return res.status(400).send({ status: false, msg: "wrong query paramater given" });
     const temp = { isDeleted: false };
