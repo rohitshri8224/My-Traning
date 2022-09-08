@@ -69,6 +69,8 @@ const demoAuthorAll = async function(req,res)
 const demoBlogAll = async function(req,res)
 {
     let demo = await blogModel.find()
+    // let demo = await blogModel.updateMany({isDelete:true},{isDelete:false})
+
     res.send(demo)
 }
 

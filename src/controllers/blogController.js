@@ -13,7 +13,7 @@ const createBlog = async function (req, res) {
     let blog = req.body;
     let authorId = blog.authorId;
     if (!authorId)
-      return res.status(404).send({ status: false, msg: "Required Author Id !" });
+      return res.status(400).send({ status: false, msg: "Required Author Id !" });
 
     let author_id = await authorModel.findById(authorId);
     if (!author_id)
@@ -37,7 +37,7 @@ const getBlogs = async function (req, res) {
     const query = req.query;
     const comp = ["subcategory", "category", "tags", "authorId"]
     if(!Object.keys(query).every(elem => comp.includes(elem)))
-    return res.status(404).send({ status: false, msg: "no such data" });
+    return res.status(400).send({ status: false, msg: "wrong query parameters" });
 
     const temp = { isDeleted: false, isPublished: true };
     //console.log()
@@ -46,7 +46,7 @@ const getBlogs = async function (req, res) {
 
       let data = await blogModel.find(final).populate("authorId");
       if (data.length == 0)
-        res.status(400).send({ status: false, msg: "wrong query parameters" });
+        res.status(404).send({ status: false, msg: "blog doesn't exist" });
       else res.status(200).send({ status: true, data: data });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
@@ -59,16 +59,18 @@ const updateBlog = async (req,res) => {
     try{
         let blog = req.body;
         let blogId = req.params.blogId 
+        if(!blog) return res.status(400).send({status:false,msg:"nothing to update"})
+        if(!blogId) return res.status(400).send({status:false,msg:"blogId not given"})
 
         let obj={}
         let objarr={}
         let myBlogModel = await blogModel.findById(blogId)
-        let id = myBlogModel._id.toString()
-        if(!id)
-        return res.status(400).send({error:'Invalid blogId'})
-        
         if(!myBlogModel || myBlogModel["isDeleted"]==true){
-        return res.status(404).send({status:false, error:"invalid bro!"})}
+          return res.status(404).send({status:false, msg:"Blog doesnt exist"})}
+        // let id = myBlogModel._id.toString()
+
+        // if(!id)
+        // return res.status(404).send({error:'Blog doesnt exist'})
 
         if(blog.tags) objarr["tags"]=blog.tags 
         if(blog.subcategory) objarr["subcategory"]=blog.subcategory 
@@ -91,6 +93,8 @@ const updateBlog = async (req,res) => {
   const removeBlog = async function (req, res) {
     try {
       let blogId = req.params.blogId
+      if(!blogId) return res.status(400).send({status:false,msg:"blogId not given"})
+
       let blog_id = await blogModel.findById(blogId)
       if (blog_id && blog_id.isDeleted == false) {
   
@@ -98,7 +102,7 @@ const updateBlog = async (req,res) => {
         return res.status(200).send()
   
       } else {
-        return res.status(404).send({ msg: "not found" })
+        return res.status(404).send({ msg: "blog not found" })
       }
     }
     catch (err) {
@@ -112,7 +116,7 @@ const deleteBlogs=async function(req,res){
         const query = req.query;
         const comp = ["subcategory", "category", "tags", "authorId","isPublished"]
         if(!Object.keys(query).every(elem => comp.includes(elem)))
-        return res.status(404).send({ status: false, msg: "wrong query" });
+        return res.status(400).send({ status: false, msg: "wrong query paramater given" });
         const temp = { isDeleted: false};
         const final = Object.assign({}, query, temp);
         if(Object.keys(query).length==0)
@@ -122,7 +126,7 @@ const deleteBlogs=async function(req,res){
         if (data.matchedCount == 0)
             res.status(404).send({ status: false, msg: "blog doesn't exist" });
           else 
-          res.status(200).send({ status: true, data: data });
+          res.status(200).send({ status: true, msg: data });
       }
     
     } catch (err) {

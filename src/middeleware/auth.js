@@ -7,17 +7,17 @@ const verifyAuthor = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
     if (!token) {
-      return res.status(400).send({ msg: "token not present" });
+      return res.status(401).send({ status:false, msg: "token not present" });
     }
     let validation = jwt.verify(token, "vro party all night!!!!!!!!");
 
     if (!validation) {
-      return res.status(403).send({error:'Not Authorised'});
+      return res.status(401).send({status:false, msg:'Invalid token'});
     }
     let authorId = validation.loginId
     let finalId = await authorModel.findById(authorId)
     if(!finalId)
-     return res.status(403).send({});
+     return res.status(404).send({status:false, msg:'Author doesnt exist'});
     next();
     //check if author exists
 
@@ -36,10 +36,11 @@ const authorization = async function (req, res, next) {
     let blogId = req.params.blogId;
     if(!blogId)
     return res.status(400).send({ status: false, msg: "no blogId given"})
-    let userId = await blogModel.findById(blogId);
-    if(!userId)
-    return res.status(400).send({ status: false, msg: "invalid userID"})
-    finalId = userId.authorId.toString();}
+    let blog = await blogModel.findById(blogId);
+    if(!blog)
+    return res.status(400).send({ status: false, msg: "blog doesnt exist"})
+    finalId = blog.authorId.toString();
+  }
     else {finalId = req.query.authorId}
     let validation = jwt.verify(token, "vro party all night!!!!!!!!");
 
