@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const authorModel = require("../models/authorModel")
 const blogModel = require("../models/blogModel");
 
-// verifying token
+// ======================================verifying token======================================
 const verifyAuthor = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
@@ -19,7 +19,7 @@ const verifyAuthor = async function (req, res, next) {
     if(!finalId)
      return res.status(404).send({status:false, msg:'Author doesnt exist'});
     next(); 
-    //check if author exists
+    //=====================check if author exists================================
 
   } catch (err) {
     if (err.name === 'JsonWebTokenError') {    
@@ -29,6 +29,7 @@ const verifyAuthor = async function (req, res, next) {
    
 }}
 
+//==================================Authorization======================================
 const authorization = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
@@ -61,6 +62,7 @@ const authorization = async function (req, res, next) {
     return res.status(500).send({ error: err.message });
   }
 };
+//===================================================================================================
 
 module.exports.verifyAuthor = verifyAuthor;
 module.exports.authorization = authorization;

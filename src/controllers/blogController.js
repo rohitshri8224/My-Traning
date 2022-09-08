@@ -1,27 +1,30 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
 
-//create post api
+//==============================================create post api====================================================
 
 const createBlog = async function (req, res) {
   try {
     let blog = req.body; 
     let authorId = blog.authorId;
+    
     if (!authorId)
       return res.status(400).send({ status: false, msg: "Required Author Id !" });
 
     let author_id = await authorModel.findById(authorId);
+    
     if (!author_id)
-      return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
+    return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
 
     let createBlogs = await blogModel.create(blog);
     res.status(201).send({ status: true, data: createBlogs });
-  } catch (err) {
+  }
+   catch (err) {
     res.status(500).send({ error: err.message });
   }
 };
 
-//get blog
+//=====================================================get blog================================================
 const getBlogs = async function (req, res) {
   try {
     const query = req.query;
@@ -43,7 +46,7 @@ const getBlogs = async function (req, res) {
 };
 
 
-//update blog 
+//======================================================update blog================================================ 
 const updateBlog = async (req, res) => {
   try {
     let blog = req.body;
@@ -51,7 +54,6 @@ const updateBlog = async (req, res) => {
 
     let obj = {}
     let objarr = {}
-    let myBlogModel = await blogModel.findById(blogId)
 
     if (blog.tags) objarr["tags"] = blog.tags
     if (blog.subcategory) objarr["subcategory"] = blog.subcategory
@@ -75,44 +77,47 @@ const updateBlog = async (req, res) => {
 
 }
 
-// update blog by using params
-const removeBlog = async function (req, res) {
-  try {
+// ===============================================update blog by using params==============================================
+    const removeBlog = async function (req, res) {
+    try {
   
     let blogId = req.params.blogId
-    console.log(Object.keys(req.query).length)
+
     if(Object.keys(req.query).length)
      return res.status(400).send({msg:"query not allowed"})
+
     let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
     return res.status(200).send()
-    
-
   }
-  catch (err) {
+    catch (err) {
     return res.status(500).send({ error: err.message })
   }
 }
 
-//update blog by using query
+//==================================================update blog by using query============================================
 const deleteBlogs = async function (req, res) {
 
   try {
     const query = req.query;
     const comp = ["subcategory", "category", "tags", "authorId", "isPublished"]
+    
     if(query.isPublished)
     return res.status(400).send({ status: false, msg: "ispublished is true" });
 
     if (!Object.keys(query).every(elem => comp.includes(elem)))
       return res.status(400).send({ status: false, msg: "wrong query paramater given" });
+    
     const temp = { isDeleted: false };
     const final = Object.assign({}, query, temp);
+    
     if (Object.keys(query).length == 0)
       res.status(400).send({ status: false, msg: "no query given" })
     else {
       let data = await blogModel.updateMany(final, { isDeleted: true, deletedAt: Date.now() }, { new: true });
-      if (data.matchedCount == 0)
+      
+    if (data.matchedCount == 0)
         res.status(404).send({ status: false, msg: "blog doesn't exist" });
-      else
+    else
         res.status(200).send({ status: true, msg: data });
     }
 
@@ -121,7 +126,7 @@ const deleteBlogs = async function (req, res) {
   }
 
 }
-
+//===========================================================================================================================
 
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;

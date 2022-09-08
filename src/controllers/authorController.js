@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken")
 const blogModel = require("../models/blogModel");
 
 
+//==============================================create author==================================================
 const createAuthor = async function(req,res){
    
    try{ 
@@ -16,14 +17,13 @@ const createAuthor = async function(req,res){
    }
 }
 
-// token genration
+// ==================================================token genration================================================
 
 const login = async function (req, res) {
 try{
    let emailId = req.body.email
    let password = req.body.password
    let loginUser = await authorModel.findOne({ email: emailId, password: password })
-   console.log(loginUser);
    if (!loginUser || !(loginUser.email == emailId && loginUser.password == password)) {
        return res.status(401).send({ msg: "invalid user" })
    }
@@ -43,7 +43,7 @@ try{
          return res.status(500).send({error:err.message})
       } 
 }
-
+//======================================our purpose only=============================
 const demoAuthorAll = async function(req,res)
 {
     let demo = await authorModel.find()
@@ -58,7 +58,7 @@ const demoBlogAll = async function(req,res)
     res.send(demo)
 }
 
-
+//============================================================================================
 module.exports.createAuthor = createAuthor
 module.exports.login = login
 module.exports.demoAuthorAll = demoAuthorAll
