@@ -58,6 +58,11 @@ const updateBlog = async (req, res) => {
     if (blog.body) obj["body"] = blog.body
     if (blog.title) obj["title"] = blog.title
     if (blog.category) obj["category"] = blog.category
+  
+
+    if(!Object.keys(obj).length && !Object.keys(objarr).length)
+    return res.status(400).send({error:'Enter valid field name'})
+
     obj["isPublished"] = true
     obj["publishedAt"] = Date.now()
 
@@ -73,7 +78,7 @@ const updateBlog = async (req, res) => {
 // update blog by using params
 const removeBlog = async function (req, res) {
   try {
-
+    let blogId = req.params.blogId
     let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
     return res.status(200).send()
 

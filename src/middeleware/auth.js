@@ -38,7 +38,7 @@ const authorization = async function (req, res, next) {
     {
     let blogId = req.params.blogId;
     if(!blogId)
-    return res.status(400).send({ status: false, msg: "no blogId given"})
+    return res.status(400).send({ status: false, msg: "no blogId  or authorId "})
     if (!blogId.match(/^[0-9a-fA-F]{24}$/)) {
       return res.status(400).send({ status: false, msg: "invalid blogId given"})
     }

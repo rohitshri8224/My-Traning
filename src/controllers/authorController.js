@@ -22,9 +22,9 @@ const login = async function (req, res) {
 try{
    let emailId = req.body.email
    let password = req.body.password
-   let loginUser = await authorModel.findOne({ emailId: emailId, password: password })
+   let loginUser = await authorModel.findOne({ email: emailId, password: password })
    console.log(loginUser);
-   if (!loginUser) {
+   if (!loginUser || !(loginUser.email == emailId && loginUser.password == password)) {
        return res.status(401).send({ msg: "invalid user" })
    }
    let jwtToken = jwt.sign(
@@ -52,8 +52,8 @@ const demoAuthorAll = async function(req,res)
 }
 const demoBlogAll = async function(req,res)
 {
-    let demo = await blogModel.find()
-    // let demo = await blogModel.updateMany({isDeleted:true},{isDeleted:false})
+    // let demo = await blogModel.find()
+    let demo = await blogModel.updateMany({isDeleted:true},{isDeleted:false})
 
     res.send(demo)
 }
