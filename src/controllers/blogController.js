@@ -78,9 +78,14 @@ const updateBlog = async (req, res) => {
 // update blog by using params
 const removeBlog = async function (req, res) {
   try {
+  
     let blogId = req.params.blogId
+    console.log(Object.keys(req.query).length)
+    if(Object.keys(req.query).length)
+     return res.status(400).send({msg:"query not allowed"})
     let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
     return res.status(200).send()
+    
 
   }
   catch (err) {
