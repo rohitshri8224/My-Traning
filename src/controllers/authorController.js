@@ -1,25 +1,14 @@
 const authorModel = require("../models/authorModel")
+const jwt = require("jsonwebtoken")
+const blogModel = require("../models/blogModel");
+
+
+//==============================================create author==================================================
 const createAuthor = async function(req,res){
    
    try{ 
     let data = req.body
 
-    //email validation
-    if (!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(data.email)))
-     return res.status(400).send({staus:true, error:'Invalid Email Id'})
-
-     //First name validation
-     if (!/^[a-zA-Z.]{5,10}$/.test(data.fname))
-     return res.status(400).send({staus:true, error:'First Name should be alphabets !!'})
-
-     //Last name validation
-     if (!/^[a-zA-Z.]{5,10}$/.test(data.lname))
-     return res.status(400).send({staus:true, error:'Last Name should be alphabets !!'})
-    
-     //password validation
-     if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(data.password))
-     return res.status(400).send({status:false, error:'Include( capital one or more, small one or more, digit one or more )Length should be 8 or more!'})
-    
      let savedData = await authorModel.create(data)
      res.status(201).send({msg:savedData})
    }
@@ -28,4 +17,49 @@ const createAuthor = async function(req,res){
    }
 }
 
+// ==================================================token genration================================================
+
+const login = async function (req, res) {
+try{
+   let emailId = req.body.email
+   let password = req.body.password
+   let loginUser = await authorModel.findOne({ email: emailId, password: password })
+   if (!loginUser || !(loginUser.email == emailId && loginUser.password == password)) {
+       return res.status(401).send({ msg: "invalid user" })
+   }
+   let jwtToken = jwt.sign(
+       {
+           loginId: loginUser._id.toString(),
+           userStatus: "active",
+           app: "myBlog"
+       },
+       "vro party all night!!!!!!!!"
+
+   )
+   res.setHeader("x-api-key",jwtToken)
+    res.status(200).send({ status: true })
+      }
+      catch(err){
+         return res.status(500).send({error:err.message})
+      } 
+}
+//======================================our purpose only=============================
+const demoAuthorAll = async function(req,res)
+{
+    let demo = await authorModel.find()
+
+    res.send(demo)
+}
+const demoBlogAll = async function(req,res)
+{
+    // let demo = await blogModel.find()
+    let demo = await blogModel.updateMany({isDeleted:true},{isDeleted:false})
+
+    res.send(demo)
+}
+
+//============================================================================================
 module.exports.createAuthor = createAuthor
+module.exports.login = login
+module.exports.demoAuthorAll = demoAuthorAll
+module.exports.demoBlogAll = demoBlogAll
