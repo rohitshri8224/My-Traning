@@ -39,6 +39,9 @@ const authorization = async function (req, res, next) {
     let blogId = req.params.blogId;
     if(!blogId)
     return res.status(400).send({ status: false, msg: "no blogId given"})
+    if (!blogId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({ status: false, msg: "invalid blogId given"})
+    }
     let blog = await blogModel.findById(blogId);
     if(!blog || blog.isDeleted == true)
     return res.status(400).send({ status: false, msg: "blog doesnt exist"})
