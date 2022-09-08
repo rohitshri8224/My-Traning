@@ -49,7 +49,7 @@ try{  let data = req.body
     //First name validation
     if (!(/^[a-zA-Z.]{5,10}$/).test(data.fname))
     return res.status(400).send({staus:false, msg:'Only alphabets !!'})
-    //Title validation
+    
     //Last name validation
     if (!(/^[a-zA-Z.]{5,10}$/).test(data.lname))
     return res.status(400).send({staus:false, msg:'Only alphabets !!'})
@@ -72,7 +72,7 @@ const blogCreateValidataion = function(req,res,next){
 try{    
     let data = req.body
 
-    const comp = ["subcategory", "category", "tags", "authorId","tilte","body"]
+    const comp = ["subcategory", "category", "tags", "authorId","title","body"]
     if (!Object.keys(data).every(elem => comp.includes(elem)))
     return res.status(400).send({ status: false, msg: "wrong field !" });
 
@@ -93,8 +93,7 @@ try{
     //validation for tags
     if(!data.tags)
     return res.status(400).send({status:false, msg:'tags required'})
-    if(Object.keys(data.tags).length==0)
-    return res.status(400).send({error:'Invalid tags'})
+    
     if(data.tags == '' || !/^[a-zA-Z ]+$/.test(data.tags))
     return res.status(400).send({error:'Invalid tags format ! ONLY ALPHABETS ALLOWED'})
 
@@ -107,8 +106,7 @@ try{
     //validation for subcategory
     if(!data.subcategory)
     return res.status(400).send({status:false, msg:'subcategory required'})
-    if(Object.keys(data.subcategory).length==0)
-    return res.status(400).send({status:false, msg:'Invalid subcategory'})
+    
     if(data.subcategory == '' || !/^[a-zA-Z ]+$/.test(data.subcategory))
     return res.status(400).send({error:'Invalid subcategory format ! ONLY ALPHABETS ALLOWED'})
 
