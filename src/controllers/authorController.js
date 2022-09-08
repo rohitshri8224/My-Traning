@@ -24,8 +24,8 @@ const createAuthor = async function(req,res){
      if(!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).test(data.password))
      return res.status(400).send({status:false, error:'Atleat 1 capital, 1 small, numbers and Length should be 8 or more!'})
     
-    let savedData = await authorModel.create(data)
-    res.status(201).send({msg:savedData})
+     let savedData = await authorModel.create(data)
+     res.status(201).send({msg:savedData})
    }
    catch(err){
     return res.status(500).send({error: err.message})
