@@ -94,8 +94,8 @@ try{
     if(!data.tags)
     return res.status(400).send({status:false, msg:'tags required'})
     
-    if(data.tags == '' || !/^[a-zA-Z ]+$/.test(data.tags))
-    return res.status(400).send({error:'Invalid tags format ! ONLY ALPHABETS ALLOWED'})
+    if(data.tags == '' || !/^[a-zA-Z ,]+$/.test(data.tags))
+    return res.status(400).send({error:'Invalid tags format !! ONLY ALPHABETS ALLOWED'})
 
     //validation for category
     if(!data.category)
@@ -107,8 +107,8 @@ try{
     if(!data.subcategory)
     return res.status(400).send({status:false, msg:'subcategory required'})
     
-    if(data.subcategory == '' || !/^[a-zA-Z ]+$/.test(data.subcategory))
-    return res.status(400).send({error:'Invalid subcategory format ! ONLY ALPHABETS ALLOWED'})
+    if(data.subcategory == '' || !/^[a-zA-Z ,]+$/.test(data.subcategory))
+    return res.status(400).send({error:'Invalid subcategory format! ONLY ALPHABETS ALLOWED'})
 
     // validation for title and body
    if (!/^[a-zA-Z0-9 :-]+$/.test(data.title) || (!/^[a-zA-Z0-9.,'"!? :-]+$/.test(data.body))) {
@@ -144,7 +144,7 @@ const blogUpdateValidation = function(req, res, next){
       if(data.category == '' || !/^[a-zA-Z ]+$/.test(data.category))
       return res.status(400).send({error:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
 
-      if(data.subcategory == '' || !/^[a-zA-Z ]+$/.test(data.subcategory))
+      if(data.subcategory == '' || !/^[a-zA-Z ,]+$/.test(data.subcategory))
       return res.status(400).send({status:false, msg:'Invalid subcategory format ! ONLY ALPHABETS ALLOWED'})
 
       next()
