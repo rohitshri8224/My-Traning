@@ -1,7 +1,7 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-const  mongoose  = require('mongoose');
-const objectId = mongoose.Schema.Types.ObjectId
+// const  mongoose  = require('mongoose');
+// const objectId = mongoose.Schema.Types.ObjectId
 
 
 
@@ -18,11 +18,6 @@ const createBlog = async function (req, res) {
     let author_id = await authorModel.findById(authorId);
     if (!author_id)
       return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
-
-// validation for title and body
-  if (!/^[a-zA-Z.,'"! :-]+$/.test(blog.title) || (!/^[a-zA-Z0-9.,'"! :-]+$/.test(blog.body))) {
-  return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
-}
 
     let createBlogs = await blogModel.create(blog);
      res.status(201).send({ status: true, data: createBlogs });
@@ -92,18 +87,10 @@ const updateBlog = async (req,res) => {
 // update blog by using params
   const removeBlog = async function (req, res) {
     try {
-      let blogId = req.params.blogId
-      if(!blogId) return res.status(400).send({status:false,msg:"blogId not given"})
 
-      let blog_id = await blogModel.findById(blogId)
-      if (blog_id && blog_id.isDeleted == false) {
-  
-        let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
-        return res.status(200).send()
-  
-      } else {
-        return res.status(404).send({ msg: "blog not found" })
-      }
+      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
+      return res.status(200).send()
+
     }
     catch (err) {
       return res.status(500).send({ error: err.message})

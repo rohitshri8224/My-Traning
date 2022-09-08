@@ -33,14 +33,31 @@ try{  let data = req.body
   return res.status(400).send({error:'email required'})
   let emailId =req.body.email
   console.log(emailId)
-  let matchedEmail = await authorModel.findOne({email:emailId})
-  console.log(matchedEmail)
-  if(matchedEmail.email !== data.email)
+  let matchedEmail = await authorModel.find({email:emailId})
+
+  if(matchedEmail.email == data.email)
   return res.status(400).send({error:'Enter new email Id'})
  
   //for password
   if(!data.password)
   return res.status(400).send({error:'password required'})
+
+      //email validation
+    if (!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(data.email)))
+    return res.status(400).send({staus:true, error:'Invalid Email Id'})
+
+    //First name validation
+    if (!(/^[a-zA-Z.]{5,10}$/).test(data.fname))
+    return res.status(400).send({staus:true, error:'Only alphabets !!'})
+    //Title validation
+    //Last name validation
+    if (!(/^[a-zA-Z.]{5,10}$/).test(data.lname))
+    return res.status(400).send({staus:true, error:'Only alphabets !!'})
+
+    //password validation
+    if(!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).test(data.password))
+return res.status(400).send({status:false, error:'Atleat 1 capital, 1 small, numbers and Length should be 8 or more!'})
+     
   
   next()
 }
@@ -78,6 +95,12 @@ try{
     return res.status(400).send({error:'subcategory required'})
     if(Object.keys(data.subcategory).length==0)
     return res.status(400).send({error:'Invalid subcategory'})
+
+    // validation for title and body
+  if (!/^[a-zA-Z0-9]+$/.test(blog.title) || (!/^[a-zA-Z0-9.,'"!? :-]+$/.test(blog.body))) {
+    return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
+  }
+  
 
     next()
     }

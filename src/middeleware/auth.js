@@ -37,7 +37,7 @@ const authorization = async function (req, res, next) {
     if(!blogId)
     return res.status(400).send({ status: false, msg: "no blogId given"})
     let blog = await blogModel.findById(blogId);
-    if(!blog)
+    if(!blog || blog.isDeleted == true)
     return res.status(400).send({ status: false, msg: "blog doesnt exist"})
     finalId = blog.authorId.toString();
   }
