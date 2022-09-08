@@ -1,11 +1,12 @@
-
+const authorModel = require("../models/authorModel")
 
 
 
 
 //================validation for author====================
 
-const authorValidation = function(req, res , next){
+
+const authorValidation = async function(req, res , next){
 try{  let data = req.body
   let title = ["Mr", "Mrs", "Miss"]
  
@@ -30,6 +31,12 @@ try{  let data = req.body
   //for email
   if(!data.email)
   return res.status(400).send({error:'email required'})
+  let emailId =req.body.email
+  console.log(emailId)
+  let matchedEmail = await authorModel.findOne({email:emailId})
+  console.log(matchedEmail)
+  if(matchedEmail.email !== data.email)
+  return res.status(400).send({error:'Enter new email Id'})
  
   //for password
   if(!data.password)

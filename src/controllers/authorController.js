@@ -39,6 +39,7 @@ try{
    let emailId = req.body.email
    let password = req.body.password
    let loginUser = await authorModel.findOne({ emailId: emailId, password: password })
+   console.log(loginUser);
    if (!loginUser) {
        return res.status(401).send({ msg: "invalid user" })
    }

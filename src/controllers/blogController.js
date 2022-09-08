@@ -44,7 +44,7 @@ const getBlogs = async function (req, res) {
     const final = Object.assign({}, query, temp);
           //populate
 
-      let data = await blogModel.find(final).populate('Author');
+      let data = await blogModel.find(final).populate("authorId");
       if (data.length == 0)
         res.status(400).send({ status: false, msg: "wrong query parameters" });
       else res.status(200).send({ status: true, data: data });
