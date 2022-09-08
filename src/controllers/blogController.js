@@ -1,5 +1,10 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
+// const  mongoose  = require('mongoose');
+// const objectId = mongoose.Schema.Types.ObjectId
+
+
+
 
 //create post api
 
@@ -32,7 +37,7 @@ const getBlogs = async function (req, res) {
     const temp = { isDeleted: false, isPublished: true };
 
     const final = Object.assign({}, query, temp);
-
+    
       let data = await blogModel.find(final).populate("authorId");
       if (data.length == 0)
         res.status(404).send({ status: false, msg: "blog doesn't exist" });

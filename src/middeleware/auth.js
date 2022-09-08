@@ -10,21 +10,24 @@ const verifyAuthor = async function (req, res, next) {
       return res.status(401).send({ status:false, msg: "token not present" });
     }
     let validation = jwt.verify(token, "vro party all night!!!!!!!!");
-
+ 
     if (!validation) {
       return res.status(401).send({status:false, msg:'Invalid token'});
-    }
+    } 
     let authorId = validation.loginId
     let finalId = await authorModel.findById(authorId)
     if(!finalId)
      return res.status(404).send({status:false, msg:'Author doesnt exist'});
-    next();
+    next(); 
     //check if author exists
 
   } catch (err) {
-    return res.status(500).send({ error: err.message });
-  }
-};
+    if (err.name === 'JsonWebTokenError') {    
+      res.status(401).send({"error" : err.message})}
+    else 
+    return res.status(500).send({ error: err });
+   
+}}
 
 const authorization = async function (req, res, next) {
   try {
