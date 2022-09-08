@@ -14,7 +14,7 @@ try{  let data = req.body
   if(Object.keys(data).length==0)
   return res.status(400).send({status:false, msg:'All fields are Required'})
   
-  //for fname
+  //for fnameaz
   if(!data.fname)
   return res.status(400).send({status:false, msg:'fname required'})
  
@@ -32,7 +32,7 @@ try{  let data = req.body
   if(!data.email)
   return res.status(400).send({status:false, msg:'email required'})
   let emailId =req.body.email
-  console.log(emailId)
+  
   let matchedEmail = await authorModel.find({email:emailId})
 
   if(matchedEmail.email == data.email)
@@ -47,11 +47,11 @@ try{  let data = req.body
     return res.status(400).send({staus:false, msg:'Invalid Email Id'})
 
     //First name validation
-    if (!(/^[a-zA-Z.]{5,10}$/).test(data.fname))
+    if (!(/^[a-zA-Z.]{3,}$/).test(data.fname))
     return res.status(400).send({staus:false, msg:'Only alphabets !!'})
     
     //Last name validation
-    if (!(/^[a-zA-Z.]{5,10}$/).test(data.lname))
+    if (!(/^[a-zA-Z.]{3,}$/).test(data.lname))
     return res.status(400).send({staus:false, msg:'Only alphabets !!'})
 
     //password validation
@@ -74,7 +74,7 @@ try{
 
     const comp = ["subcategory", "category", "tags", "authorId","title","body"]
     if (!Object.keys(data).every(elem => comp.includes(elem)))
-    return res.status(400).send({ status: false, msg: "wrong field !" });
+    return res.status(400).send({ status: false, msg: " OH MAN !! wrong field !" });
 
 
 
