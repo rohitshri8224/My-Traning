@@ -89,6 +89,14 @@ try{
     return res.status(400).send({error:'tags required'})
     if(Object.keys(data.tags).length==0)
     return res.status(400).send({error:'Invalid tags'})
+    if(data.tags == '' || !/^[a-zA-Z]+$/.test(data.tags))
+    return res.status(400).send({error:'Invalid tags format ! ONLY ALPHABETS ALLOWED'})
+
+    //validation for category
+    if(!data.category)
+    return res.status(400).send({error:'category required'})
+    if(data.category == '' || !/^[a-zA-Z]+$/.test(data.category))
+    return res.status(400).send({error:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
 
     //validation for subcategory
     if(!data.subcategory)
@@ -97,7 +105,7 @@ try{
     return res.status(400).send({error:'Invalid subcategory'})
 
     // validation for title and body
-  if (!/^[a-zA-Z0-9]+$/.test(blog.title) || (!/^[a-zA-Z0-9.,'"!? :-]+$/.test(blog.body))) {
+   if (!/^[a-zA-Z0-9 :-]+$/.test(data.title) || (!/^[a-zA-Z0-9.,'"!? :-]+$/.test(data.body))) {
     return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
   }
   
@@ -118,7 +126,7 @@ const blogUpdateValidation = function(req, res, next){
       if(Object.keys(data).length == 0)
       return res.status(400).send({error:'Empty field not allowed'})
 
-      if(data.title == '' || !/^[a-zA-Z0-9]+$/.test(data.title))
+      if(data.title == '' || !/^[a-zA-Z0-9 :-]+$/.test(data.title))
       return res.status(400).send({error:'Invalid title format ! ONLY ALPHA-NUMERIC ALLOWED'})
 
       if(data.body == '' || !/^[a-zA-Z0-9.!"'? :-]+$/.test(data.body))
@@ -126,6 +134,9 @@ const blogUpdateValidation = function(req, res, next){
 
       if(data.tags == '' || !/^[a-zA-Z]+$/.test(data.tags))
       return res.status(400).send({error:'Invalid tags format ! ONLY ALPHABETS ALLOWED'})
+
+      if(data.category == '' || !/^[a-zA-Z]+$/.test(data.category))
+      return res.status(400).send({error:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
 
       if(data.subcategory == '' || !/^[a-zA-Z]+$/.test(data.subcategory))
       return res.status(400).send({error:'Invalid subcategory format ! ONLY ALPHABETS ALLOWED'})
