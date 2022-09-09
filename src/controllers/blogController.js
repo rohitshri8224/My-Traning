@@ -78,6 +78,7 @@ const updateBlog = async (req, res) => {
 }
 
 // ===============================================update blog by using params==============================================
+
     const removeBlog = async function (req, res) {
     try {
   
@@ -87,7 +88,7 @@ const updateBlog = async (req, res) => {
      return res.status(400).send({msg:"query not allowed"})
 
     let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
-    return res.status(200).send()
+  return res.status(200).send({data:deletedBlog})
   }
     catch (err) {
     return res.status(500).send({ error: err.message })
@@ -101,7 +102,7 @@ const deleteBlogs = async function (req, res) {
     const query = req.query;
     const comp = ["subcategory", "category", "tags", "authorId", "isPublished"]
     
-    if(query.isPublished)
+    if(query.isPublished == "true")
     return res.status(400).send({ status: false, msg: "ispublished is true" });
 
     if (!Object.keys(query).every(elem => comp.includes(elem)))
