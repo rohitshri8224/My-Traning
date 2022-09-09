@@ -60,6 +60,7 @@ const updateBlog = async (req, res) => {
     obj["publishedAt"] = Date.now()
 
     const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: obj }, { new: true })
+    //if no update?
     res.status(200).send({ data: allBlogs })
 
   } catch (err) {
@@ -91,27 +92,17 @@ const deleteBlogs = async function (req, res) {
 
   try {
     const query = req.query;
-    const comp = ["subcategory", "category", "tags", "authorId", "isPublished"]
-    
-    if(query.isPublished == "true")
-    return res.status(400).send({ status: false, msg: "ispublished is true" });
 
-    if (!Object.keys(query).every(elem => comp.includes(elem)))
-      return res.status(400).send({ status: false, msg: "wrong query paramater given" });
-    
     //deleting for valid authorId only
     const temp = { isDeleted: false , authorId:req.authorId.toString()};
     const final = Object.assign({}, query, temp);
-    
 
-    
-      let data = await blogModel.updateMany(final, { isDeleted: true, deletedAt: Date.now() }, { new: true });
+    let data = await blogModel.updateMany(final, { isDeleted: true, deletedAt: Date.now() }, { new: true });
       
     if (data.matchedCount == 0)
         res.status(404).send({ status: false, msg: "blog doesn't exist" });
     else
         res.status(200).send({ status: true, msg: data });
-  
 
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
