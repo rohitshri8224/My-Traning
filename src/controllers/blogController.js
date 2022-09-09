@@ -103,16 +103,15 @@ const deleteBlogs = async function (req, res) {
     const temp = { isDeleted: false , authorId:req.authorId.toString()};
     const final = Object.assign({}, query, temp);
     
-    if (Object.keys(query).length == 0)
-      res.status(400).send({ status: false, msg: "no query given" })
-    else {
+
+    
       let data = await blogModel.updateMany(final, { isDeleted: true, deletedAt: Date.now() }, { new: true });
       
     if (data.matchedCount == 0)
         res.status(404).send({ status: false, msg: "blog doesn't exist" });
     else
         res.status(200).send({ status: true, msg: data });
-    }
+  
 
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });

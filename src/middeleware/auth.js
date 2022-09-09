@@ -59,6 +59,8 @@ const authorization = async function (req, res, next) {
   //for handling delete by query
     else {
       let newQuery = req.query
+      if (Object.keys(query).length == 0)
+      return res.status(400).send({ status: false, msg: "no query given" })
       let findQuery = await blogModel.find(newQuery)
       let newData = findQuery.filter(ele=>ele.authorId==loggedinUser)
 

@@ -85,10 +85,6 @@ try{
     if (!author_id)
     return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
 
-    //validation for data
-    if(Object.keys(data).length==0)
-    return res.status(400).send({status:false, msg:'All fields are Required'})
-
     //validation for title
     if(!data.title)
     return res.status(400).send({status:false, msg:'title required'})
