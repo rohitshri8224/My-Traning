@@ -34,8 +34,8 @@ const authorization = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
     let finalId
-
-    if(!req.query.authorId)
+//  For handling delete and update by id 
+    if(!Object.keys(req.query).length)
     {
     let blogId = req.params.blogId;
     if(!blogId)
@@ -48,7 +48,24 @@ const authorization = async function (req, res, next) {
     return res.status(400).send({ status: false, msg: "blog doesnt exist"})
     finalId = blog.authorId.toString();
   }
-    else {finalId = req.query.authorId}
+  //for handling delete by query
+    else {
+      let newQuery = req.query
+      let findQuery = await blogModel.find(newQuery)
+     
+      let validation = jwt.verify(token, "vro party all night!!!!!!!!");
+      let loggedinUser = validation.loginId;
+      
+      let newData = findQuery.find(ele=>ele.authorId)
+      console.log(newData)
+      
+      if (newData["authorId"].toString() !== loggedinUser) {
+        return res
+          .status(403)
+          .send({ status: false, msg: "invalid user not allowed" });
+      }
+    }
+    // authorization 
     let validation = jwt.verify(token, "vro party all night!!!!!!!!");
 
     let loggedinUser = validation.loginId;
