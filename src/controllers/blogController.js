@@ -6,15 +6,6 @@ const authorModel = require("../models/authorModel");
 const createBlog = async function (req, res) {
   try {
     let blog = req.body; 
-    let authorId = blog.authorId;
-    
-    if (!authorId)
-      return res.status(400).send({ status: false, msg: "Required Author Id !" });
-
-    let author_id = await authorModel.findById(authorId);
-    
-    if (!author_id)
-    return res.status(400).send({ status: false, msg: "Invalid Author Id !" });
 
     let createBlogs = await blogModel.create(blog);
     res.status(201).send({ status: true, data: createBlogs });
@@ -108,7 +99,8 @@ const deleteBlogs = async function (req, res) {
     if (!Object.keys(query).every(elem => comp.includes(elem)))
       return res.status(400).send({ status: false, msg: "wrong query paramater given" });
     
-    const temp = { isDeleted: false };
+    //deleting for valid authorId only
+    const temp = { isDeleted: false , authorId:req.authorId.toString()};
     const final = Object.assign({}, query, temp);
     
     if (Object.keys(query).length == 0)

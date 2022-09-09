@@ -34,46 +34,38 @@ const authorization = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
     let finalId
+         
+    let validation = jwt.verify(token, "vro party all night!!!!!!!!");
+    let loggedinUser = validation.loginId;
 //  For handling delete and update by id 
     if(!Object.keys(req.query).length)
     {
-    let blogId = req.params.blogId;
-    if(!blogId)
-    return res.status(400).send({ status: false, msg: "no blogId  or authorId "})
-    if (!blogId.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).send({ status: false, msg: "invalid blogId given"})
+      let blogId = req.params.blogId;
+      if(!blogId)
+      return res.status(400).send({ status: false, msg: "no blogId  or authorId "})
+      if (!blogId.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).send({ status: false, msg: "invalid blogId given"})
+        }
+      let blog = await blogModel.findById(blogId);
+      if(!blog || blog.isDeleted == true)
+      return res.status(400).send({ status: false, msg: "blog doesnt exist"})
+      finalId = blog.authorId.toString();
+      if (finalId !== loggedinUser) {
+        return res
+          .status(403)
+          .send({ status: false, msg: "invalid user not allowed" });
+        }
     }
-    let blog = await blogModel.findById(blogId);
-    if(!blog || blog.isDeleted == true)
-    return res.status(400).send({ status: false, msg: "blog doesnt exist"})
-    finalId = blog.authorId.toString();
-  }
   //for handling delete by query
     else {
       let newQuery = req.query
       let findQuery = await blogModel.find(newQuery)
-     
-      let validation = jwt.verify(token, "vro party all night!!!!!!!!");
-      let loggedinUser = validation.loginId;
-      
-      let newData = findQuery.find(ele=>ele.authorId)
-      console.log(newData)
-      
-      if (newData["authorId"].toString() !== loggedinUser) {
-        return res
-          .status(403)
-          .send({ status: false, msg: "invalid user not allowed" });
-      }
-    }
-    // authorization 
-    let validation = jwt.verify(token, "vro party all night!!!!!!!!");
+      let newData = findQuery.filter(ele=>ele.authorId==loggedinUser)
 
-    let loggedinUser = validation.loginId;
-    if (finalId !== loggedinUser) {
-      return res
-        .status(403)
-        .send({ status: false, msg: "invalid user not allowed" });
+      let authId = newData[0].authorId
+      req["authorId"]=authId
     }
+
     next();
   } catch (err) {
     return res.status(500).send({ error: err.message });
