@@ -43,14 +43,14 @@ try{
          return res.status(500).send({error:err.message})
       } 
 }
-//======================================our purpose only=============================
+//======================================our purpose only======================================================================
 const demoAuthorAll = async function(req,res)
 {
     let demo = await authorModel.find()
 
     res.send(demo)
 }
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------
 const demoBlogAll = async function(req,res)
 {
     // let demo = await blogModel.find()
@@ -59,7 +59,7 @@ const demoBlogAll = async function(req,res)
     res.send(demo)
 }
 
-//============================================================================================
+//====================================================================================================================================
 module.exports.createAuthor = createAuthor
 module.exports.login = login
 module.exports.demoAuthorAll = demoAuthorAll

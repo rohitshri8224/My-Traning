@@ -3,7 +3,7 @@ const authorModel = require("../models/authorModel")
 
 
 
-//================validation for author====================
+//================validation for author=============================================================================================
 
 
 const authorValidation = async function(req, res , next){
@@ -66,7 +66,7 @@ catch(err){
 }
 }
 
-//==================blog create validation=========
+//==================blog create validation==================================================================================
 
 const blogCreateValidataion = async function(req,res,next){
 try{    
@@ -126,7 +126,7 @@ try{
     }
 }
 
-//=================update blog validation=================
+//=================update blog validation==========================================================================================
 
 const blogUpdateValidation = function(req, res, next){
  try{
