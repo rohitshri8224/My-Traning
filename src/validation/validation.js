@@ -10,7 +10,7 @@ const authorValidation = async function(req, res , next){
 try{  let data = req.body
   let title = ["Mr", "Mrs", "Miss"]
 
-  const comp = [ "fname", "lname", "email","title","password"]
+    const comp = ["fname", "lname", "email","title","password"]
     if (!Object.keys(data).every(elem => comp.includes(elem)))
     return res.status(400).send({ status: false, msg: " DAMN !! NO EXTRA KEY FIELD" });
  
@@ -36,12 +36,10 @@ try{  let data = req.body
   if(!data.email)
   return res.status(400).send({status:false, msg:'email required'})
   let emailId =req.body.email
-  
-  let matchedEmail = await authorModel.findOne({email:emailId})
 
-  if(matchedEmail.email == data.email)
-  return res.status(400).send({status:false, msg:'Enter new email Id'})
- 
+  if (await authorModel.findOne({ email:emailId }))
+  return res.status(400).send({ msg: "Email Id already exist" })
+  
   //for password
   if(!data.password)
   return res.status(400).send({status:false, msg:'password required'})
