@@ -17,9 +17,7 @@ const verifyAuthor = async function (req, res, next) {
     let authorId = validation.loginId;
     let finalId = await authorModel.findById(authorId);
     if (!finalId)
-      return res
-        .status(404)
-        .send({ status: false, msg: "Author doesnt exist" });
+      return res.status(404).send({ status: false, msg: "Author doesnt exist" });
     next();
     //=====================check if author exists================================
   } catch (err) {
@@ -41,14 +39,10 @@ const authorization = async function (req, res, next) {
 
     let blogId = req.params.blogId;
     if (!blogId)
-      return res
-        .status(400)
-        .send({ status: false, msg: "no blogId  or authorId " });
+      return res.status(400).send({ status: false, msg: "no blogId  or authorId " });
 
     if (!blogId.match(/^[0-9a-fA-F]{24}$/))
-      return res
-        .status(400)
-        .send({ status: false, msg: "invalid blogId given" });
+      return res.status(400).send({ status: false, msg: "invalid blogId given" });
 
     let blog = await blogModel.findById(blogId);
     if (!blog || blog.isDeleted == true)
@@ -56,9 +50,7 @@ const authorization = async function (req, res, next) {
 
     finalId = blog.authorId.toString();
     if (finalId !== loggedinUser)
-      return res
-        .status(403)
-        .send({ status: false, msg: "invalid user not allowed" });
+      return res.status(403).send({ status: false, msg: "invalid user not allowed" });
 
     next();
   } catch (err) {
@@ -76,16 +68,21 @@ const authDeleteByQuery = async function (req, res, next) {
     let loggedinUser = validation.loginId;
     let query = req.query;
 
+    if(!Object.keys(query).length){
+      return res.status(400).send({error:'Empty field not allowed'})
+    }
+
     const comp = ["subcategory", "category", "tags", "authorId", "isPublished"];
     if (!Object.keys(query).every((elem) => comp.includes(elem)))
-      return res
-        .status(400)
-        .send({ status: false, msg: "wrong query paramater given" });
+      return res.status(400).send({ status: false, msg: "wrong query paramater given" });
+
+       if(!Object.values(query).every((elem) =>{if(!elem) {return false} else {return true} }))
+        return res.status(400).send({ status: false, msg: "Empty query paramater given" });
+        
+    
 
     if (query.isPublished == "true")
-      return res
-        .status(400)
-        .send({ status: false, msg: "ispublished is true" });
+      return res.status(400).send({ status: false, msg: "ispublished is true" });
 
     let findQuery = await blogModel.find(query);
     if (findQuery.length == 0)
@@ -93,9 +90,7 @@ const authDeleteByQuery = async function (req, res, next) {
 
     let newData = findQuery.filter((ele) => ele.authorId == loggedinUser);
     if (newData.length == 0)
-      return res
-        .status(403)
-        .send({ status: false, msg: "unauthorised access" });
+      return res.status(403).send({ status: false, msg: "unauthorised access" });
 
     let authId = newData[0].authorId;
     req["authorId"] = authId;
