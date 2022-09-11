@@ -29,6 +29,8 @@ const blogSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    publishedAt: Date,
+    deletedAt: Date
   },
   { timestamps: true }
 );
