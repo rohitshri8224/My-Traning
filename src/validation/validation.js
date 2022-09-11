@@ -9,6 +9,10 @@ const authorModel = require("../models/authorModel")
 const authorValidation = async function(req, res , next){
 try{  let data = req.body
   let title = ["Mr", "Mrs", "Miss"]
+
+  const comp = [ "fname", "lname", "email","title","password"]
+    if (!Object.keys(data).every(elem => comp.includes(elem)))
+    return res.status(400).send({ status: false, msg: " DAMN !! NO EXTRA KEY FIELD" });
  
   //If no data in body
   if(Object.keys(data).length==0)
@@ -33,7 +37,7 @@ try{  let data = req.body
   return res.status(400).send({status:false, msg:'email required'})
   let emailId =req.body.email
   
-  let matchedEmail = await authorModel.find({email:emailId})
+  let matchedEmail = await authorModel.findOne({email:emailId})
 
   if(matchedEmail.email == data.email)
   return res.status(400).send({status:false, msg:'Enter new email Id'})
