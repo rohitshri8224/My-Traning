@@ -94,6 +94,7 @@ const deleteBlogs = async function (req, res) {
     const query = req.query;
 
     //deleting for valid authorId only
+    
     const temp = { isDeleted: false , authorId:req.authorId.toString()};
     const final = Object.assign({}, query, temp);
 

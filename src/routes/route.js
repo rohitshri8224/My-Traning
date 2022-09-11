@@ -10,7 +10,7 @@ const validation = require('../validation/validation')
 router.get("/blogs", mid.verifyAuthor, blogController.getBlogs)
 
 //create author API
-router.post("/authors", mid.verifyAuthor, validation.authorValidation, authorController.createAuthor)
+router.post("/authors",  validation.authorValidation, authorController.createAuthor)
 
 //create blog API
 router.post("/blogs", mid.verifyAuthor, validation.blogCreateValidataion, blogController.createBlog)

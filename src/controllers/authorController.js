@@ -50,6 +50,7 @@ const demoAuthorAll = async function(req,res)
 
     res.send(demo)
 }
+//------------------------------------------------------------------------------
 const demoBlogAll = async function(req,res)
 {
     // let demo = await blogModel.find()
