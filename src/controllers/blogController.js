@@ -24,7 +24,10 @@ const getBlogs = async function (req, res) {
     const comp = ["subcategory", "category", "tags", "authorId"]
     if (!Object.keys(query).every(elem => comp.includes(elem)))
       return res.status(400).send({ status: false, msg: "wrong query parameters" });
-
+    //empty query value
+    if(!Object.values(query).every((elem) =>{if(!elem) {return false} else {return true} }))
+    return res.status(400).send({ status: false, msg: "Empty query paramater given" });
+    
     const temp = { isDeleted: false, isPublished: true };
 
     const final = Object.assign({}, query, temp);
