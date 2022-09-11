@@ -19,11 +19,10 @@ const verifyAuthor = async function (req, res, next) {
     //valid authorId given-----------------
 
     let finalId = await authorModel.findById(authorId);
-    if (!finalId)
-      return res
-        .status(404)
-        .send({ status: false, msg: "Author doesnt exist" });
-    next();
+    if (!finalId) return res.status(404).send({ status: false, msg: "Author doesnt exist" });
+      
+      next();
+     
     //=================================check if author exists==========================================================================
   } catch (err) {
     //valid jwt given-----------------
@@ -45,21 +44,18 @@ const authorization = async function (req, res, next) {
     //  For handling delete and update by id----------------
 
     let blogId = req.params.blogId;
-    if (!blogId)
-      return res
-        .status(400)
-        .send({ status: false, msg: "no blogId  or authorId " });
+    if (!blogId) return res.status(400).send({ status: false, msg: "no blogId  or authorId " });
+      
 
     //blogId invalid format--------------------
 
     if (!blogId.match(/^[0-9a-fA-F]{24}$/))
-      return res
-        .status(400)
-        .send({ status: false, msg: "invalid blogId given" });
-
+      return res.status(400).send({ status: false, msg: "invalid blogId given" });
+        
     //if blog found--------------
 
     let blog = await blogModel.findById(blogId);
+
     if (!blog || blog.isDeleted == true)
       return res.status(400).send({ status: false, msg: "blog doesnt exist" });
 
@@ -67,9 +63,9 @@ const authorization = async function (req, res, next) {
 
     finalId = blog.authorId.toString();
     if (finalId !== loggedinUser)
-      return res
-        .status(403)
-        .send({ status: false, msg: "invalid user not allowed" });
+      return res.status(403).send({ status: false, msg: "invalid user not allowed" });
+       
+        
 
     next();
   } catch (err) {
@@ -96,14 +92,11 @@ const authDeleteByQuery = async function (req, res, next) {
 
     const comp = ["subcategory", "category", "tags", "authorId", "isPublished"];
     if (!Object.keys(query).every((elem) => comp.includes(elem)))
-      return res
-        .status(400)
-        .send({ status: false, msg: "wrong query paramater given" });
+      return res.status(400).send({ status: false, msg: "wrong query paramater given" });
 
     //empty query value------------------------------
 
-    if (
-      !Object.values(query).every((elem) => {
+    if (!Object.values(query).every((elem) => {
         if (!elem) {
           return false;
         } else {
@@ -111,16 +104,12 @@ const authDeleteByQuery = async function (req, res, next) {
         }
       })
     )
-      return res
-        .status(400)
-        .send({ status: false, msg: "Empty query paramater given" });
-
+      return res.status(400).send({ status: false, msg: "Empty query paramater given" });
+        
     //unpublished only------------------------------
 
     if (query.isPublished == "true")
-      return res
-        .status(400)
-        .send({ status: false, msg: "ispublished is true" });
+      return res.status(400).send({ status: false, msg: "ispublished is true" });
 
     //valid query------------------------------
 
@@ -132,9 +121,7 @@ const authDeleteByQuery = async function (req, res, next) {
 
     let newData = findQuery.filter((ele) => ele.authorId == loggedinUser);
     if (newData.length == 0)
-      return res
-        .status(403)
-        .send({ status: false, msg: "unauthorised access" });
+      return res.status(403).send({ status: false, msg: "unauthorised access" });
 
     let authId = newData[0].authorId;
     req["authorId"] = authId;
