@@ -19,7 +19,7 @@ router.post("/blogs", mid.verifyAuthor, validation.blogCreateValidataion, blogCo
 router.put("/blogs/:blogId", mid.verifyAuthor, mid.authorization, validation.blogUpdateValidation, blogController.updateBlog)
 
 //delete blog using query params API
-router.delete("/blogs", mid.verifyAuthor, mid.authorization, blogController.deleteBlogs)
+router.delete("/blogs", mid.verifyAuthor, mid.authDeleteByQuery, blogController.deleteBlogs)
 
 //delete blog using path params API
 router.delete("/blogs/:blogId", mid.verifyAuthor, mid.authorization, blogController.removeBlog)
