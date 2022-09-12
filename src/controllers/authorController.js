@@ -13,7 +13,7 @@ const createAuthor = async function(req,res){
      res.status(201).send({status:true,data:savedData})
    }
    catch(err){
-    return res.status(500).send({error: err.message})
+    return res.status(500).send({ status: false, msg: err.message})
    }
 }
 
@@ -25,7 +25,7 @@ try{
    let password = req.body.password
    let loginUser = await authorModel.findOne({ email: emailId, password: password })
    if (!loginUser || !(loginUser.email == emailId && loginUser.password == password)) {
-       return res.status(401).send({ msg: "invalid user" })
+       return res.status(401).send({  status: false, msg: "invalid user" })
    }
    let jwtToken = jwt.sign(
        {
@@ -40,7 +40,7 @@ try{
     res.status(200).send({ status: true , data:jwtToken})
       }
       catch(err){
-         return res.status(500).send({error:err.message})
+         return res.status(500).send({ status: false, msg:err.message})
       } 
 }
 //======================================our purpose only======================================================================

@@ -20,7 +20,7 @@ const createBlog = async function (req, res) {
     
   }
    catch (err) {
-    res.status(500).send({ error: err.message });
+    res.status(500).send({  status: false, msg: err.message });
   }
 };
 
@@ -43,7 +43,8 @@ const getBlogs = async function (req, res) {
     return res.status(400).send({ status: false, msg: "invalid authorId given" });
    }
     const temp = { isDeleted: false, isPublished: true };
-
+     
+    // merging two objects 
     const final = Object.assign({}, query, temp);
 
     let data = await blogModel.find(final).populate("authorId");
@@ -88,12 +89,12 @@ const updateBlog = async (req, res) => {
     //if no update?-----------------------------------
 
   } catch (err) {
-    return res.status(500).send({ error: err.message })
+    return res.status(500).send({  status: false, msg: err.message })
   }
 
 }
 
-// ===============================================update blog by using params==============================================
+// =============================================== update blog by using params ==============================================
 
     const removeBlog = async function (req, res) {
     try {
@@ -101,13 +102,13 @@ const updateBlog = async (req, res) => {
     let blogId = req.params.blogId
       //if queries given-----------------------------------
     if(Object.keys(req.query).length)
-     return res.status(400).send({msg:"query not allowed"})
+     return res.status(400).send({ status: false, msg:"query not allowed"})
 
     let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date.now() }, { new: true })
   return res.status(200).send({status:true,data:deletedBlog})
   }
     catch (err) {
-    return res.status(500).send({ error: err.message })
+    return res.status(500).send({  status: false, msg: err.message })
   }
 }
 

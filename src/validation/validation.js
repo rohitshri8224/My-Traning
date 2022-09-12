@@ -38,7 +38,7 @@ try{  let data = req.body
   let emailId =req.body.email
 
   if (await authorModel.findOne({ email:emailId }))
-  return res.status(400).send({ msg: "Email Id already exist" })
+  return res.status(400).send({  status: false, msg: "Email Id already exist" })
   
   //for password
   if(!data.password)
@@ -46,19 +46,19 @@ try{  let data = req.body
 
       //email validation
     if (!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(data.email)))
-    return res.status(400).send({staus:false, msg:'Invalid Email Id'})
+    return res.status(400).send({status:false, msg:'Invalid Email Id'})
 
     //First name validation
     if (!(/^[a-zA-Z.]{3,}$/).test(data.fname))
-    return res.status(400).send({staus:false, msg:'Only alphabets in fname!!'})
+    return res.status(400).send({status:false, msg:'Only alphabets in fname!!'})
     
     //Last name validation
     if (!(/^[a-zA-Z.]{3,}$/).test(data.lname))
-    return res.status(400).send({staus:false, msg:'Only alphabets in lname !!'})
+    return res.status(400).send({status:false, msg:'Only alphabets in lname !!'})
 
     //password validation
     if(!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).test(data.password))
-return res.status(400).send({status:false , msg:'Atleat 1 capital, 1 small, numbers and Length should be 8 or more in password!'})
+return res.status(400).send({status:false, msg:'Atleat 1 capital, 1 small, numbers and Length should be 8 or more in password!'})
      
   
   next()
@@ -144,19 +144,19 @@ const blogUpdateValidation = function(req, res, next){
   return res.status(400).send({status:false, msg:'Empty field not allowed'})
 
   if(data.title == '' || !/^[a-zA-Z0-9 :-]+$/.test(data.title))
-  return res.status(400).send({status:false, msg:'Invalid title format ! ONLY ALPHA-NUMERIC ALLOWED'})
+  return res.status(400).send({status:false, msg:'Invalid title format !! ONLY ALPHA-NUMERIC ALLOWED'})
 
   if(data.body == '' || !/^[a-zA-Z0-9.!"'? :-]+$/.test(data.body))
-  return res.status(400).send({status:false, msg:'Invalid body format ! ONLY ALPHA-NUMERIC, (. ! " ? : -) ALLOWED'})
+  return res.status(400).send({status:false, msg:'Invalid body format !! ONLY ALPHA-NUMERIC, (. ! " ? : -) ALLOWED'})
 
   if(data.tags == '' || !/^[a-zA-Z ]+$/.test(data.tags))
-  return res.status(400).send({status:false, msg:'Invalid tags format ! ONLY ALPHABETS ALLOWED'})
+  return res.status(400).send({status:false, msg:'Invalid tags format !! ONLY ALPHABETS ALLOWED'})
 
   if(data.category == '' || !/^[a-zA-Z ]+$/.test(data.category))
-  return res.status(400).send({status:false, msg:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
+  return res.status(400).send({status:false, msg:'Invalid Category format !! ONLY ALPHABETS ALLOWED'})
 
   if(data.subcategory == '' || !/^[a-zA-Z ,]+$/.test(data.subcategory))
-  return res.status(400).send({status:false, msg:'Invalid subcategory format ! ONLY ALPHABETS ALLOWED'})
+  return res.status(400).send({status:false, msg:'Invalid subcategory format !! ONLY ALPHABETS ALLOWED'})
 
   next()
 }

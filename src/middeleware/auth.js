@@ -28,8 +28,8 @@ const verifyAuthor = async function (req, res, next) {
     //valid jwt given-----------------
 
     if (err.name === "JsonWebTokenError") {
-      res.status(401).send({ error: err.message });
-    } else return res.status(500).send({ error: err });
+      res.status(401).send({  status: false, msg: err.message });
+    } else return res.status(500).send({  status: false, msg: err.message });
   }
 };
 
@@ -69,7 +69,7 @@ const authorization = async function (req, res, next) {
 
     next();
   } catch (err) {
-    res.status(500).send({ error: err.message });
+    res.status(500).send({  status: false, msg: err.message });
   }
 };
 
@@ -85,7 +85,7 @@ const authDeleteByQuery = async function (req, res, next) {
     //empty query-------------------------
 
     if (!Object.keys(query).length) {
-      return res.status(400).send({ error: "Empty field not allowed" });
+      return res.status(400).send({  status: false, msg: "Empty field not allowed" });
     }
 
     //authorId invalid format--------------------
@@ -128,7 +128,7 @@ const authDeleteByQuery = async function (req, res, next) {
 
     next();
   } catch (err) {
-    return res.status(500).send({ error: err.message });
+    return res.status(500).send({  status: false, msg: err.message });
   }
 };
 
