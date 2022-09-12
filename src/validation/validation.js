@@ -50,15 +50,15 @@ try{  let data = req.body
 
     //First name validation
     if (!(/^[a-zA-Z.]{3,}$/).test(data.fname))
-    return res.status(400).send({staus:false, msg:'Only alphabets !!'})
+    return res.status(400).send({staus:false, msg:'Only alphabets in fname!!'})
     
     //Last name validation
     if (!(/^[a-zA-Z.]{3,}$/).test(data.lname))
-    return res.status(400).send({staus:false, msg:'Only alphabets !!'})
+    return res.status(400).send({staus:false, msg:'Only alphabets in lname !!'})
 
     //password validation
     if(!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).test(data.password))
-return res.status(400).send({status:false , msg:'Atleat 1 capital, 1 small, numbers and Length should be 8 or more!'})
+return res.status(400).send({status:false , msg:'Atleat 1 capital, 1 small, numbers and Length should be 8 or more in password!'})
      
   
   next()
@@ -75,9 +75,15 @@ try{
     let data = req.body
     let authorId = data.authorId;
 
-    const comp = ["subcategory", "category", "tags", "authorId","title","body"]
+    const comp = ["subcategory", "category", "tags", "authorId","title","body","isPublished"]
     if (!Object.keys(data).every(elem => comp.includes(elem)))
     return res.status(400).send({ status: false, msg: " OH MAN !! wrong field !" });
+
+    //authorId invalid format--------------------
+
+    if (!data.authorId.match(/^[0-9a-fA-F]{24}$/))
+      return res.status(400).send({ status: false, msg: "invalid authorId given" });
+     
 
     if (!authorId)
     return res.status(400).send({ status: false, msg: "Required Author Id !" });
@@ -96,21 +102,21 @@ try{
     return res.status(400).send({status:false, msg:'body required'})
 
     //validation for tags
-    if(!data.tags)
-    return res.status(400).send({status:false, msg:'tags required'})
+    // if(!data.tags)
+    // return res.status(400).send({status:false, msg:'tags required'})
     
     if(!/^[a-zA-Z ,]+$/.test(data.tags))
     return res.status(400).send({error:'Invalid tags format !! ONLY ALPHABETS ALLOWED'})
 
     //validation for category
-    if(!data.category)
+    if(!data.category) 
     return res.status(400).send({error:'category required'})
     if(!/^[a-zA-Z ]+$/.test(data.category))
     return res.status(400).send({error:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
 
     //validation for subcategory
-    if(!data.subcategory)
-    return res.status(400).send({status:false, msg:'subcategory required'})
+    // if(!data.subcategory)
+    // return res.status(400).send({status:false, msg:'subcategory required'})
     
     if(!/^[a-zA-Z ,]+$/.test(data.subcategory))
     return res.status(400).send({error:'Invalid subcategory format! ONLY ALPHABETS ALLOWED'})
@@ -134,7 +140,7 @@ const blogUpdateValidation = function(req, res, next){
  try{
       let data = req.body
 
-      const comp = ["subcategory", "category", "tags", "authorId","title","body"]
+      const comp = ["subcategory", "category", "tags", "authorId","title","body","isPublished"]
       if (!Object.keys(data).every(elem => comp.includes(elem)))
       return res.status(400).send({ status: false, msg: " OH MAN !! wrong field !" });
 

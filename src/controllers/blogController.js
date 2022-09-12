@@ -6,9 +6,18 @@ const authorModel = require("../models/authorModel");
 const createBlog = async function (req, res) {
   try {
     let blog = req.body; 
+    let nid = Object.assign({},{publishedAt:null,deletedAt:null},blog)
+    let yid = Object.assign({},{publishedAt:Date.now(),deletedAt:null},blog)
 
-    let createBlogs = await blogModel.create(blog);
-    res.status(201).send({ status: true, data: createBlogs });
+    if(blog.isPublished)
+    {let createBlogs = await blogModel.create(yid);
+      return res.status(201).send({ status: true, data: createBlogs })
+    }
+    else
+    {let createBlogs = await blogModel.create(nid);
+      return res.status(201).send({ status: true, data: createBlogs });
+    }
+    
   }
    catch (err) {
     res.status(500).send({ error: err.message });
@@ -29,6 +38,10 @@ const getBlogs = async function (req, res) {
     if(!Object.values(query).every((elem) =>{if(!elem) {return false} else {return true} }))
     return res.status(400).send({ status: false, msg: "Empty query paramater given" });
     
+    if(query.authorId)
+    {if (!query.authorId.match(/^[0-9a-fA-F]{24}$/))
+    return res.status(400).send({ status: false, msg: "invalid authorId given" });
+   }
     const temp = { isDeleted: false, isPublished: true };
 
     const final = Object.assign({}, query, temp);
@@ -51,7 +64,6 @@ const updateBlog = async (req, res) => {
   try {
     let blog = req.body;
     let blogId = req.params.blogId
-
     let obj = {}
     let objarr = {}
     //seperating array and string values-----------------------------------
@@ -60,17 +72,20 @@ const updateBlog = async (req, res) => {
     if (blog.body) obj["body"] = blog.body
     if (blog.title) obj["title"] = blog.title
     if (blog.category) obj["category"] = blog.category
-  
-    //if nothing in body given-----------------------------------
-    if(!Object.keys(obj).length && !Object.keys(objarr).length)
-    return res.status(400).send({error:'Enter valid field name'})
+    
+    let nid = Object.assign({},{publishedAt:null},obj)
+    let yid = Object.assign({},{publishedAt:Date.now()},obj)
 
-    obj["isPublished"] = true
-    obj["publishedAt"] = Date.now()
+    if(blog.isPublished)
+    {const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: yid }, { new: true })
+    return res.status(201).send({ status: true, data: allBlogs });
+    }
+    else
+    {const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: nid }, { new: true })
+      return res.status(201).send({ status: true, data: allBlogs });
+    }
 
-    const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: obj }, { new: true })
     //if no update?-----------------------------------
-    res.status(200).send({ data: allBlogs })
 
   } catch (err) {
     return res.status(500).send({ error: err.message })
@@ -89,7 +104,7 @@ const updateBlog = async (req, res) => {
      return res.status(400).send({msg:"query not allowed"})
 
     let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date.now() }, { new: true })
-  return res.status(200).send({data:deletedBlog})
+  return res.status(200).send({status:true,data:deletedBlog})
   }
     catch (err) {
     return res.status(500).send({ error: err.message })

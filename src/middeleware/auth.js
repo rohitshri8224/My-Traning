@@ -88,6 +88,12 @@ const authDeleteByQuery = async function (req, res, next) {
       return res.status(400).send({ error: "Empty field not allowed" });
     }
 
+    //authorId invalid format--------------------
+
+    if (!query.authorId.match(/^[0-9a-fA-F]{24}$/))
+      return res.status(400).send({ status: false, msg: "invalid authorId given" });
+       
+
     //wrong query key------------------------------
 
     const comp = ["subcategory", "category", "tags", "authorId", "isPublished"];
@@ -96,14 +102,8 @@ const authDeleteByQuery = async function (req, res, next) {
 
     //empty query value------------------------------
 
-    if (!Object.values(query).every((elem) => {
-        if (!elem) {
-          return false;
-        } else {
-          return true;
-        }
-      })
-    )
+    if (!Object.values(query).every((elem) => {if (!elem) {return false;} else {return true;}}))
+    
       return res.status(400).send({ status: false, msg: "Empty query paramater given" });
         
     //unpublished only------------------------------

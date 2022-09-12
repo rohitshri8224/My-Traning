@@ -19,6 +19,7 @@ const blogSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
+      lowercase:true
     },
     subcategory: [String],
     isDeleted: {

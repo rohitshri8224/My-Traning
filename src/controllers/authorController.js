@@ -10,7 +10,7 @@ const createAuthor = async function(req,res){
     let data = req.body
 
      let savedData = await authorModel.create(data)
-     res.status(201).send({msg:savedData})
+     res.status(201).send({status:true,data:savedData})
    }
    catch(err){
     return res.status(500).send({error: err.message})
@@ -36,8 +36,8 @@ try{
        "vro party all night!!!!!!!!"
 
    )
-   res.setHeader("x-api-key",jwtToken)
-    res.status(200).send({ status: true })
+//    res.setHeader("x-api-key",jwtToken)
+    res.status(200).send({ status: true , data:jwtToken})
       }
       catch(err){
          return res.status(500).send({error:err.message})
