@@ -79,11 +79,11 @@ const updateBlog = async (req, res) => {
 
     if(blog.isPublished)
     {const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: yid }, { new: true })
-    return res.status(201).send({ status: true, data: allBlogs });
+    return res.status(200).send({ status: true, data: allBlogs, message:"" });
     }
     else
     {const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: nid }, { new: true })
-      return res.status(201).send({ status: true, data: allBlogs });
+      return res.status(200).send({ status: true, data: allBlogs, message:"" });
     }
 
     //if no update?-----------------------------------
