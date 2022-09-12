@@ -53,7 +53,7 @@ try{  let data = req.body
     return res.status(400).send({status:false, msg:'Only alphabets in fname!!'})
     
     //Last name validation
-    if (!(/^[a-zA-Z.]{3,}$/).test(data.lname))
+    if (!(/^[a-zA-Z. ]{3,}$/).test(data.lname))
     return res.status(400).send({status:false, msg:'Only alphabets in lname !!'})
 
     //password validation
