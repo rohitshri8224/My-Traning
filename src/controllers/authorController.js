@@ -25,7 +25,7 @@ try{
    let password = req.body.password
    let loginUser = await authorModel.findOne({ email: emailId, password: password })
    if (!loginUser || !(loginUser.email == emailId && loginUser.password == password)) {
-       return res.status(401).send({  status: false, msg: "invalid user" })
+       return res.status(401).send({  status: false, msg: "invalid Login details" })
    }
    let jwtToken = jwt.sign(
        {
