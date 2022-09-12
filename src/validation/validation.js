@@ -102,28 +102,24 @@ try{
     return res.status(400).send({status:false, msg:'body required'})
 
     //validation for tags
-    // if(!data.tags)
-    // return res.status(400).send({status:false, msg:'tags required'})
     
     if(!/^[a-zA-Z ,]+$/.test(data.tags))
-    return res.status(400).send({error:'Invalid tags format !! ONLY ALPHABETS ALLOWED'})
+    return res.status(400).send({status:false, msg:'Invalid tags format !! ONLY ALPHABETS ALLOWED'})
 
     //validation for category
     if(!data.category) 
-    return res.status(400).send({error:'category required'})
+    return res.status(400).send({status:false, msg:'category required'})
     if(!/^[a-zA-Z ]+$/.test(data.category))
-    return res.status(400).send({error:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
+    return res.status(400).send({status:false, msg:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
 
     //validation for subcategory
-    // if(!data.subcategory)
-    // return res.status(400).send({status:false, msg:'subcategory required'})
     
     if(!/^[a-zA-Z ,]+$/.test(data.subcategory))
-    return res.status(400).send({error:'Invalid subcategory format! ONLY ALPHABETS ALLOWED'})
+    return res.status(400).send({status:false, msg:'Invalid subcategory format! ONLY ALPHABETS ALLOWED'})
 
     // validation for title and body
    if (!/^[a-zA-Z0-9 :-]+$/.test(data.title) || (!/^[a-zA-Z0-9.,'"!? :-]+$/.test(data.body))) {
-    return res.status(400).send({ status: false, message: 'Special character not allowed ! Except : -' })
+    return res.status(400).send({ status: false, msg: 'Special character not allowed ! Except : -' })
   }
   
 
@@ -138,31 +134,31 @@ try{
 
 const blogUpdateValidation = function(req, res, next){
  try{
-      let data = req.body
+  let data = req.body
 
-      const comp = ["subcategory", "category", "tags", "authorId","title","body","isPublished"]
-      if (!Object.keys(data).every(elem => comp.includes(elem)))
-      return res.status(400).send({ status: false, msg: " OH MAN !! wrong field !" });
+  const comp = ["subcategory", "category", "tags", "authorId","title","body","isPublished"]
+  if (!Object.keys(data).every(elem => comp.includes(elem)))
+  return res.status(400).send({ status: false, msg: " OH MAN !! wrong field !" });
 
-      if(Object.keys(data).length == 0)
-      return res.status(400).send({status:false, msg:'Empty field not allowed'})
+  if(Object.keys(data).length == 0)
+  return res.status(400).send({status:false, msg:'Empty field not allowed'})
 
-      if(data.title == '' || !/^[a-zA-Z0-9 :-]+$/.test(data.title))
-      return res.status(400).send({error:'Invalid title format ! ONLY ALPHA-NUMERIC ALLOWED'})
+  if(data.title == '' || !/^[a-zA-Z0-9 :-]+$/.test(data.title))
+  return res.status(400).send({status:false, msg:'Invalid title format ! ONLY ALPHA-NUMERIC ALLOWED'})
 
-      if(data.body == '' || !/^[a-zA-Z0-9.!"'? :-]+$/.test(data.body))
-      return res.status(400).send({status:false, msg:'Invalid body format ! ONLY ALPHA-NUMERIC, (. ! " ? : -) ALLOWED'})
+  if(data.body == '' || !/^[a-zA-Z0-9.!"'? :-]+$/.test(data.body))
+  return res.status(400).send({status:false, msg:'Invalid body format ! ONLY ALPHA-NUMERIC, (. ! " ? : -) ALLOWED'})
 
-      if(data.tags == '' || !/^[a-zA-Z ]+$/.test(data.tags))
-      return res.status(400).send({status:false, msg:'Invalid tags format ! ONLY ALPHABETS ALLOWED'})
+  if(data.tags == '' || !/^[a-zA-Z ]+$/.test(data.tags))
+  return res.status(400).send({status:false, msg:'Invalid tags format ! ONLY ALPHABETS ALLOWED'})
 
-      if(data.category == '' || !/^[a-zA-Z ]+$/.test(data.category))
-      return res.status(400).send({error:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
+  if(data.category == '' || !/^[a-zA-Z ]+$/.test(data.category))
+  return res.status(400).send({status:false, msg:'Invalid Category format ! ONLY ALPHABETS ALLOWED'})
 
-      if(data.subcategory == '' || !/^[a-zA-Z ,]+$/.test(data.subcategory))
-      return res.status(400).send({status:false, msg:'Invalid subcategory format ! ONLY ALPHABETS ALLOWED'})
+  if(data.subcategory == '' || !/^[a-zA-Z ,]+$/.test(data.subcategory))
+  return res.status(400).send({status:false, msg:'Invalid subcategory format ! ONLY ALPHABETS ALLOWED'})
 
-      next()
+  next()
 }
 catch(err){
     return res.status(500).send({status:false, msg:err.message})

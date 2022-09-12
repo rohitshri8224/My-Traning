@@ -36,7 +36,7 @@ try{
        "vro party all night!!!!!!!!"
 
    )
-//    res.setHeader("x-api-key",jwtToken)
+
     res.status(200).send({ status: true , data:jwtToken})
       }
       catch(err){
