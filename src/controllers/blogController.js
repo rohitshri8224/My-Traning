@@ -9,16 +9,17 @@ const createBlog = async function (req, res) {
     let nid = Object.assign({},{publishedAt:null,deletedAt:null},blog)
     let yid = Object.assign({},{publishedAt:Date.now(),deletedAt:null},blog)
 
-    if(blog.isPublished)
-    {let createBlogs = await blogModel.create(yid);
-      return res.status(201).send({ status: true, data: createBlogs })
-    }
-    else
-    {let createBlogs = await blogModel.create(nid);
-      return res.status(201).send({ status: true, data: createBlogs });
-    }
-    
-  }
+    if(typeof (blog.isPublished) != 'undefined') 
+    { if(typeof (blog.isPublished) == 'boolean')
+      {if(blog.isPublished)
+        {let createBlogs = await blogModel.create(yid);
+        return res.status(201).send({ status: true, data: createBlogs })}
+        else{let createBlogs = await blogModel.create(nid);
+          return res.status(201).send({ status: true, data: createBlogs })}
+      } else return res.status(400).send({status:true, message:"isPublished is not boolean"})
+    } else
+      {let createBlogs = await blogModel.create(nid);
+        return res.status(201).send({ status: true, data: createBlogs })}}
    catch (err) {
     res.status(500).send({  status: false, msg: err.message });
   }
@@ -74,17 +75,25 @@ const updateBlog = async (req, res) => {
     if (blog.title) obj["title"] = blog.title
     if (blog.category) obj["category"] = blog.category
     
-    let nid = Object.assign({},{publishedAt:null},obj)
-    let yid = Object.assign({},{publishedAt:Date.now()},obj)
-
-    if(blog.isPublished)
+    let nid = Object.assign({},{publishedAt:null,isPublished:false},obj)
+    let yid = Object.assign({},{publishedAt:Date.now(),isPublished:true},obj)
+    console.log(typeof blog.isPublished)
+    //if undefined, do not change isPublished
+    if(typeof (blog.isPublished) == 'boolean')
+    //if defined and true, change isPublished to true and PublishedAt to date.now
+    {if(blog.isPublished)
     {const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: yid }, { new: true })
     return res.status(200).send({ status: true, data: allBlogs, message:"" });
     }
+    //if defined and false, change isPublished to false and PublishedAt to null
     else
     {const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: nid }, { new: true })
       return res.status(200).send({ status: true, data: allBlogs, message:"" });
-    }
+    }}
+
+    const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: obj }, { new: true })
+      return res.status(200).send({ status: true, data: allBlogs, message:"" });
+    
 
     //if no update?-----------------------------------
 

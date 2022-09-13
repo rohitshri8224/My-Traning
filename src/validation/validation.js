@@ -102,7 +102,6 @@ try{
     return res.status(400).send({status:false, msg:'body required'})
 
     //validation for tags
-    
     if(!/^[a-zA-Z ,]+$/.test(data.tags))
     return res.status(400).send({status:false, msg:'Invalid tags format !! ONLY ALPHABETS ALLOWED'})
 
@@ -148,10 +147,10 @@ const blogUpdateValidation = function(req, res, next){
 
   if(data.body == '' || !/^[a-zA-Z0-9.!"'? :-]+$/.test(data.body))
   return res.status(400).send({status:false, msg:'Invalid body format !! ONLY ALPHA-NUMERIC, (. ! " ? : -) ALLOWED'})
-
-  if(data.tags == '' || !/^[a-zA-Z ]+$/.test(data.tags))
+  // 
+  if(data.tags == '' || !/^[a-zA-Z ,]+$/.test(data.tags))
   return res.status(400).send({status:false, msg:'Invalid tags format !! ONLY ALPHABETS ALLOWED'})
-
+  //|| !/^[a-zA-Z ,]+$/.test(data.subcategory)
   if(data.category == '' || !/^[a-zA-Z ]+$/.test(data.category))
   return res.status(400).send({status:false, msg:'Invalid Category format !! ONLY ALPHABETS ALLOWED'})
 
