@@ -77,7 +77,7 @@ const updateBlog = async (req, res) => {
     
     let nid = Object.assign({},{publishedAt:null,isPublished:false},obj)
     let yid = Object.assign({},{publishedAt:Date.now(),isPublished:true},obj)
-    console.log(typeof blog.isPublished)
+    // console.log(typeof blog.isPublished)
     //if undefined, do not change isPublished
     if(typeof (blog.isPublished) == 'boolean')
     //if defined and true, change isPublished to true and PublishedAt to date.now
@@ -91,7 +91,7 @@ const updateBlog = async (req, res) => {
       return res.status(200).send({ status: true, data: allBlogs, message:"" });
     }}
 
-    const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: obj }, { new: true })
+    const allBlogs = await blogModel.findOneAndUpdate({ _id: blogId }, { $push: objarr, $set: nid }, { new: true })
       return res.status(200).send({ status: true, data: allBlogs, message:"" });
     
 

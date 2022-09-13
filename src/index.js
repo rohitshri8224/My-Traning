@@ -6,8 +6,6 @@ const app = express();
 
 app.use(bodyParser.json());
 
-
-
 mongoose.connect("mongodb+srv://Satishr183:6SdvyY7phCfH5VsV@cluster0.ewmx8.mongodb.net/Project1-DB", {
   
 })

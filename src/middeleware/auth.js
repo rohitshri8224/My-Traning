@@ -90,7 +90,7 @@ const authDeleteByQuery = async function (req, res, next) {
 
     //authorId invalid format--------------------
 
-    if (!query.authorId.match(/^[0-9a-fA-F]{24}$/))
+    if (query.authorId && !query.authorId.match(/^[0-9a-fA-F]{24}$/))
       return res.status(400).send({ status: false, msg: "invalid authorId given" });
        
 

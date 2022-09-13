@@ -81,12 +81,11 @@ try{
 
     //authorId invalid format--------------------
 
-    if (!data.authorId.match(/^[0-9a-fA-F]{24}$/))
-      return res.status(400).send({ status: false, msg: "invalid authorId given" });
-     
-
     if (!authorId)
     return res.status(400).send({ status: false, msg: "Required Author Id !" });
+
+    if (!data.authorId.match(/^[0-9a-fA-F]{24}$/))
+      return res.status(400).send({ status: false, msg: "invalid authorId given" });
 
     let author_id = await authorModel.findById(authorId);
     
