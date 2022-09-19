@@ -61,9 +61,9 @@ const authorization = async function (req, res, next) {
 
     //authorization---------------
 
-    finalId = blog.authorId.toString();
-    if (finalId !== loggedinUser)
-      return res.status(403).send({ status: false, msg: "invalid user not allowed" });
+    // finalId = blog.authorId.toString();
+    // if (finalId !== loggedinUser)
+    //   return res.status(403).send({ status: false, msg: "invalid user not allowed" });
        
         
 
